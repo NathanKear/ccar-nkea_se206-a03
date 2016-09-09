@@ -7,7 +7,7 @@ public class VoxspellPrototype extends Application {
 
 	private Stage _window;
 	
-	private final String _windowTitle = "VOXSPELL (Hey Charles!)";
+	private final String _windowTitle = "VOXSPELL(Hey Nathan! I hope this works!)";
 	
 	public VoxspellPrototype() {
 	}
