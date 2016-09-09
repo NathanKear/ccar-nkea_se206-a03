@@ -1,6 +1,8 @@
 package VoxspellPrototype;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
@@ -72,6 +74,13 @@ public class VoxspellPrototype extends Application {
 		
 		// Add buttons to pane
 		menuButtons.getChildren().addAll(btnNew, btnReview, btnStats, btnClear, btnQuit);
+		
+		btnNew.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				_window.setScene(new Scene(new LevelSelectionScreen(wordHolder), _width, _height));
+			}	
+		});
 		
 		return menuButtons;
 	}
