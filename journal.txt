@@ -1,0 +1,17 @@
+Sep 9th
+
+Setup the project's directory structure in Eclipse and included the jfxrt.jar in the project. Wrote three scripts, compile.sh, execute.sh and compex.sh to compile and run the project. Finally the readme.txt and journal.txt were written (or at least started).
+
+Created a git repository for the project on the local machine.
+# setup git repository
+> git init 
+
+# to add all files to git repo
+> git add .
+
+# to commit all changes to the repo
+> git commit -a -m <message>
+
+A private github project was setup and local repo was pushed up.
+> git remote add origin https://github.com/NathanKear/ccar-nkea_se206-a03.git
+> git push -u origin master
