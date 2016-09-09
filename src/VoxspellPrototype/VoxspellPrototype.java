@@ -1,8 +1,16 @@
 package VoxspellPrototype;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -45,6 +53,7 @@ public class VoxspellPrototype extends Application {
 		
 		_window.setTitle(WINDOW_TITLE);
 		_window.show();
+		initialiseNathansAwesomeDataStructure("NZCER-spelling-lists.txt");
 	}
 
 	public static void main(String[] args) {
@@ -74,5 +83,40 @@ public class VoxspellPrototype extends Application {
 		menuButtons.getChildren().addAll(btnNew, btnReview, btnStats, btnClear, btnQuit);
 		
 		return menuButtons;
+	}
+	
+	private HashMap<String, HashMap<String, int[]>> initialiseNathansAwesomeDataStructure(String fileName) {
+		File wordList = new File(fileName);
+
+		String line;
+		int lvlCounter = 1;
+		String levelKey = "";
+		
+		HashMap<String, HashMap<String, int[]>> nathansAwesomeDataStructure = new HashMap<String, HashMap<String, int[]>>();
+		HashMap<String, int[]> levelHashMap = new HashMap<String, int[]>();
+		
+		try {
+			BufferedReader textFileReader = new BufferedReader(new FileReader(wordList));
+
+			while((line = textFileReader.readLine()) != null) {
+	
+				if(line.charAt(0) == '%') {
+					levelKey = "level " + lvlCounter;
+					lvlCounter++;
+					levelHashMap = new HashMap<String, int[]>();
+
+				} else {
+					levelHashMap.put(line, new int[3]);
+					nathansAwesomeDataStructure.put(levelKey, levelHashMap);
+				}
+
+			}
+			textFileReader.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return nathansAwesomeDataStructure;
 	}
 }
