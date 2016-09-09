@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javafx.application.Application;
@@ -12,7 +11,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -30,6 +28,8 @@ public class VoxspellPrototype extends Application {
 	private final int BUTTON_SEPERATION = 6; 
 	
 	private String _displayText = "Hello World!";
+	
+	private HashMap<String, HashMap<String, int[]>> _wordHolder;
 	
 	public VoxspellPrototype() {
 	}
@@ -55,7 +55,10 @@ public class VoxspellPrototype extends Application {
 		
 		_window.setTitle(WINDOW_TITLE);
 		_window.show();
-		initialiseNathansAwesomeDataStructure("NZCER-spelling-lists.txt");
+		
+		_wordHolder = initialiseNathansAwesomeDataStructure("NZCER-spelling-lists.txt");
+		
+		_window.setScene(new Scene(new Statistics(_wordHolder), _width, _height));
 	}
 
 	public static void main(String[] args) {
@@ -95,28 +98,41 @@ public class VoxspellPrototype extends Application {
 	}
 	
 	private HashMap<String, HashMap<String, int[]>> initialiseNathansAwesomeDataStructure(String fileName) {
+		//Creating the file to read from
 		File wordList = new File(fileName);
 
 		String line;
 		int lvlCounter = 1;
 		String levelKey = "";
 		
+		//Initialising the data structures
 		HashMap<String, HashMap<String, int[]>> nathansAwesomeDataStructure = new HashMap<String, HashMap<String, int[]>>();
 		HashMap<String, int[]> levelHashMap = new HashMap<String, int[]>();
 		
 		try {
+			//Creating the reader to loop through each line in the text file
 			BufferedReader textFileReader = new BufferedReader(new FileReader(wordList));
 
 			while((line = textFileReader.readLine()) != null) {
 	
+				//If the first char is % then its the name of the level
 				if(line.charAt(0) == '%') {
+					
+					//Set the level name and increase the counter by 1
 					levelKey = "level " + lvlCounter;
 					lvlCounter++;
+					
+					//Create the hashmap for that level
 					levelHashMap = new HashMap<String, int[]>();
 
 				} else {
+					
+					//Hashing each word to the level hashmap
 					levelHashMap.put(line, new int[3]);
+					
+					//Hashing the level hashmap to the overall hashmap
 					nathansAwesomeDataStructure.put(levelKey, levelHashMap);
+					
 				}
 
 			}
