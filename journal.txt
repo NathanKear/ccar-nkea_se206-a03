@@ -15,3 +15,6 @@ Created a git repository for the project on the local machine.
 A private github project was setup and local repo was pushed up.
 > git remote add origin https://github.com/NathanKear/ccar-nkea_se206-a03.git
 > git push -u origin master
+
+To download a copy from GitHub
+> git pull origin master
