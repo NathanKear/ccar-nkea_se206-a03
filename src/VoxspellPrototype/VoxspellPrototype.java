@@ -8,20 +8,24 @@ public class VoxspellPrototype extends Application {
 
 	private Window _window;
 	
-	private final String WINDOW_TITLE = "VOXSPELL(Hey Nathan! I hope this works!)";
+	private final String WINDOW_TITLE = "VoxSpell";
+	private final int WINDOW_WIDTH = 800;
+	private final int WINDOW_HEIGHT = 500;
 
 	public VoxspellPrototype() {
 	}
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		_window = new Window(stage, 500, 200);
+		stage.setResizable(false);
+		_window = new Window(stage, WINDOW_WIDTH, WINDOW_HEIGHT);
 		
-		_window.SetWindowTitle(WINDOW_TITLE);
+		_window.SetWindowTitle(WINDOW_TITLE);	
+				
+		_window.SetWindowScene(new Scene(new MainScreen(_window), _window.GetWidth(), _window.GetHeight()));
+		
+		_window.CenterOnScreen();
 		_window.Show();
-
-		//_window.setScene(new Scene(new Statistics(WordList.GetWordList()), _width, _height));
-		_window.SetWindowScene(new Scene(new MainScreen(_window)));
 	}
 
 	public static void main(String[] args) {

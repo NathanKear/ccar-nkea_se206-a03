@@ -2,6 +2,7 @@ package VoxspellPrototype;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class Window {
 	
@@ -18,6 +19,7 @@ public class Window {
 	
 	public Window(Stage window, int width, int height) {
 		this._window = window;
+		//this._window.initStyle(StageStyle.DECORATED);
 		
 		this._height = height;
 		this._width = width;
@@ -33,5 +35,9 @@ public class Window {
 	
 	public void Show() {
 		_window.show();
+	}
+	
+	public void CenterOnScreen() {
+		_window.centerOnScreen();
 	}
 }
