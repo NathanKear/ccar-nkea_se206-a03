@@ -6,12 +6,16 @@ import javafx.scene.Parent;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
-public class Statistics extends Parent {
+public class StatisticsScreen extends Parent {
 	
-	public Statistics(HashMap<String, HashMap<String, int[]>> dataStruct) {
+	private Window _window;
+	
+	public StatisticsScreen(Window window) {
+		
+		this._window = window;
 		
 		//Getting the number of tabs to create
-		int numOfTabs = dataStruct.size();
+		int numOfTabs = WordList.GetWordList().size();
 		
 		//This will be the name of each tab
 		String tabName;

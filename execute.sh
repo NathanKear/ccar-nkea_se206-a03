@@ -1,1 +1,1 @@
-java -cp .:./lib/jfxrt.jar:./src VoxspellPrototype.VoxspellPrototype
+java -Dprism.verbose=true -cp .:./src:./lib/jfxrt.jar VoxspellPrototype.VoxspellPrototype
