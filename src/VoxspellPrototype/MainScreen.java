@@ -21,19 +21,19 @@ import javafx.stage.Stage;
 public class MainScreen extends Parent {
 
 	private Window _window;
+		
+	// Constants gone wild!
+	private final String TXT_WELCOME = "Hello World!\n\n&\n\nWelcome to VoxSpell";
 	private final int BUTTON_SEPERATION = 6; 
 	private final int MENU_BAR_PADDING = 10;
 	private final double MENUBAR_SCREENWIDTH_RATIO = 0.333;
-	
-	private String _displayText = "Hello World!";
+	private final int TXT_FONT_SIZE = 28;
+	private final int BTN_FONT_SIZE = 22;
 	private final String BTN_NEW_TEXT = "New Quiz";
 	private final String BTN_REVIEW_TEXT = "Review Mistakes";
 	private final String BTN_STATS_TEXT = "View Stats";
 	private final String BTN_CLEAR_TEXT = "Clear Stats";
 	private final String BTN_QUIT_TEXT = "Quit";
-	
-	private final int TXT_FONT_SIZE = 28;
-	private final int BTN_FONT_SIZE = 22;
 	private final String BTN_COLOR = "#9ad3de";
 	private final String BACK_COLOR = "#89bdd3";
 	private final String BTN_FONT_COLOR = "#e3e3e3";
@@ -61,7 +61,7 @@ public class MainScreen extends Parent {
 		double menuBarWidth = _window.GetWidth() * MENUBAR_SCREENWIDTH_RATIO;
 		Pane menuPane = buildMenuBar(menuBarWidth);
 		
-		Text welcomeText = new Text(_displayText);
+		Text welcomeText = new Text(TXT_WELCOME);
 		
 		// Set text area width to that remaining of windows width after
 		// menu bar width and padding is removed
@@ -81,7 +81,7 @@ public class MainScreen extends Parent {
 		
 		// Add menu bar and text to root node
 		root.getChildren().addAll(menuPane, welcomeText);
-		
+
 		this.getChildren().add(root);
 		
 		this.setStyle("-fx-background-color: " + BACK_COLOR + ";");

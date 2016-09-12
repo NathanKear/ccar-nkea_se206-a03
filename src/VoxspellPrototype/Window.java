@@ -1,8 +1,9 @@
 package VoxspellPrototype;
 
+import java.awt.Rectangle;
+
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class Window {
 	
@@ -19,8 +20,7 @@ public class Window {
 	
 	public Window(Stage window, int width, int height) {
 		this._window = window;
-		//this._window.initStyle(StageStyle.DECORATED);
-		
+
 		this._height = height;
 		this._width = width;
 	}
@@ -39,5 +39,13 @@ public class Window {
 	
 	public void CenterOnScreen() {
 		_window.centerOnScreen();
+	}
+	
+	public Rectangle GetBounds() {
+		return new Rectangle(
+				(int)this._window.getX(),
+				(int)this._window.getY(),
+				(int)this._window.getWidth(),
+				(int)this._window.getHeight());
 	}
 }
