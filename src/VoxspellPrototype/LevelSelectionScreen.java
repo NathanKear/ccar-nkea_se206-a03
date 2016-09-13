@@ -31,6 +31,11 @@ public class LevelSelectionScreen extends Parent {
 	private final double BUTTON_HEIGHT;
 	private final double BUTTON_WIDTH;
 	private final double SCROLL_EDGE_SIZE = 100;
+	private final double SCROLL_SENSITIVITY = 500;
+	
+	private VBox _levelButtons;
+	private double _scrollPosition = 0;
+	private Timeline _timeline;
 
 	public LevelSelectionScreen(Window window) {
 		super();
@@ -53,14 +58,18 @@ public class LevelSelectionScreen extends Parent {
 		}
 
 		// Create vbox, add all level buttons
-		VBox levelButtons = new VBox(BUTTON_SEPERATION);
-		levelButtons.getChildren().addAll(_btnLevels);
-		levelButtons.setPrefWidth(_window.GetWidth());
-		levelButtons.setAlignment(Pos.CENTER);
+		_levelButtons = new VBox(BUTTON_SEPERATION);
+		_levelButtons.getChildren().addAll(_btnLevels);
+		_levelButtons.setPrefWidth(_window.GetWidth());
+		_levelButtons.setAlignment(Pos.CENTER);
+		_levelButtons.setTranslateY(_scrollPosition);
 		
-		Timeline tl = new Timeline(new KeyFrame(Duration.millis(100), _scrollTimer));
-
-		this.getChildren().add(levelButtons);
+		_timeline = new Timeline(new KeyFrame(Duration.millis(100), _scrollTimer));
+		_timeline.setCycleCount(Timeline.INDEFINITE);
+		
+		_timeline.play();
+		
+		this.getChildren().add(_levelButtons);
 	}
 	
 	private EventHandler<ActionEvent> _scrollTimer = new EventHandler<ActionEvent>() {
@@ -70,7 +79,31 @@ public class LevelSelectionScreen extends Parent {
 			Rectangle windowBounds = _window.GetBounds();
 			
 			if (windowBounds.contains(mousePoint)) {
-				Point relMousePoint = new Point();
+				Point relMousePoint = new Point(
+						(int) (mousePoint.getY() - windowBounds.getY()), 
+						(int) (mousePoint.getX() - windowBounds.getX()));
+				
+				System.out.println("Tick: x = " + relMousePoint.getX() + ", y = " + relMousePoint.getY());
+				double dist = Double.MAX_VALUE;
+				double scrollSpeed = 0;
+				
+				if (relMousePoint.getX() < _window.GetHeight() / 2) {
+					// Distance between top and mouse
+					dist = relMousePoint.getX();
+				} else {
+					// Distance between bottom and mouse
+					dist = -(_window.GetHeight() - relMousePoint.getX());
+				}
+				
+				
+				if (Math.abs(dist) > SCROLL_EDGE_SIZE) {
+					scrollSpeed = SCROLL_SENSITIVITY / dist;	
+					_scrollPosition = _scrollPosition + scrollSpeed;
+					_scrollPosition = Math.min(0, _scrollPosition);
+					_scrollPosition = Math.max(-(_levelButtons.getHeight() - _window.GetHeight()), _scrollPosition);
+					_levelButtons.setTranslateY(_scrollPosition);
+				}
+		
 			}
 		}	
 	};
