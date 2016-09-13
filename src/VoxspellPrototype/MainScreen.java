@@ -27,8 +27,8 @@ public class MainScreen extends Parent {
 	private final int BUTTON_SEPERATION = 6; 
 	private final int MENU_BAR_PADDING = 10;
 	private final double MENUBAR_SCREENWIDTH_RATIO = 0.333;
-	private final int TXT_FONT_SIZE = 28;
-	private final int BTN_FONT_SIZE = 22;
+	private final int TXT_FONT_SIZE = VoxspellPrototype.TXT_FONT_SIZE;
+	private final int BTN_FONT_SIZE = VoxspellPrototype.BTN_FONT_SIZE;
 	private final String BTN_NEW_TEXT = "New Quiz";
 	private final String BTN_REVIEW_TEXT = "Review Mistakes";
 	private final String BTN_STATS_TEXT = "View Stats";
@@ -47,10 +47,8 @@ public class MainScreen extends Parent {
 		
 		this._window = window;
 		
-		// Create root node
+		// Create root node and set its size
 		HBox root = new HBox(0);
-		
-		// Set root node size
 		root.setPrefWidth(_window.GetWidth());
 		root.setPrefHeight(_window.GetHeight());
 		
