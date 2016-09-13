@@ -34,10 +34,10 @@ public class MainScreen extends Parent {
 	private final String BTN_STATS_TEXT = "View Stats";
 	private final String BTN_CLEAR_TEXT = "Clear Stats";
 	private final String BTN_QUIT_TEXT = "Quit";
-	private final String BTN_COLOR = "#9ad3de";
-	private final String BACK_COLOR = "#89bdd3";
-	private final String BTN_FONT_COLOR = "#e3e3e3";
-	private final String TXT_FONT_COLOR = "#e3e3e3";
+	private final String BTN_COLOR = VoxspellPrototype.DARK_BLUE;
+	private final String BACK_COLOR = VoxspellPrototype.LIGHT_BLUE;
+	private final String BTN_FONT_COLOR = VoxspellPrototype.WHITE;
+	private final String TXT_FONT_COLOR = VoxspellPrototype.WHITE;
 	
 	private final int TEXT_CEILING_SEPERATION = 160;
 	
@@ -53,9 +53,6 @@ public class MainScreen extends Parent {
 		// Set root node size
 		root.setPrefWidth(_window.GetWidth());
 		root.setPrefHeight(_window.GetHeight());
-		
-		// Set root node color
-		root.setStyle("-fx-background-color: " + BACK_COLOR + ";");
 		
 		// Create menu bar
 		double menuBarWidth = _window.GetWidth() * MENUBAR_SCREENWIDTH_RATIO;
@@ -84,7 +81,8 @@ public class MainScreen extends Parent {
 
 		this.getChildren().add(root);
 		
-		this.setStyle("-fx-background-color: " + BACK_COLOR + ";");
+		// Set root node color
+		root.setStyle("-fx-background-color: " + BACK_COLOR + ";");
 	}
 	
 	private Pane buildMenuBar(double desiredWidth) {

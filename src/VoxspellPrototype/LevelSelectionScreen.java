@@ -27,11 +27,15 @@ public class LevelSelectionScreen extends Parent {
 	private final int BUTTON_SEPERATION = 6;
 	private final int SELECTION_BAR_PADDING = 10;
 	private final double SELECTIONBAR_SCREENWIDTH_RATIO = 0.333;	
-	private final double BUTTONS_PER_SCREEN = 8;
+	private final double BUTTONS_PER_SCREEN = 6;
 	private final double BUTTON_HEIGHT;
 	private final double BUTTON_WIDTH;
-	private final double SCROLL_EDGE_SIZE = 100;
+	private final double SCROLL_EDGE_SIZE = 150;
 	private final double SCROLL_SENSITIVITY = 500;
+	private final int BTN_FONT_SIZE = 22;
+	private final String BTN_COLOR = VoxspellPrototype.DARK_BLUE;
+	private final String BACK_COLOR = VoxspellPrototype.LIGHT_BLUE;
+	private final String BTN_FONT_COLOR = VoxspellPrototype.WHITE;
 	
 	private VBox _levelButtons;
 	private double _scrollPosition = 0;
@@ -42,8 +46,12 @@ public class LevelSelectionScreen extends Parent {
 
 		this._window = window;
 		
-		HBox root = new HBox();
+		// Create vbox, add all level buttons
+		VBox root = new VBox(BUTTON_SEPERATION);
 		
+		// Set root node size
+		root.setPrefWidth(_window.GetWidth());
+
 		_btnLevels = new ArrayList<Button>();
 		BUTTON_HEIGHT = _window.GetHeight() / BUTTONS_PER_SCREEN;
 		BUTTON_WIDTH = _window.GetWidth() * SELECTIONBAR_SCREENWIDTH_RATIO;
@@ -53,23 +61,28 @@ public class LevelSelectionScreen extends Parent {
 			Button btn = new Button(listName);
 			btn.setPrefWidth(BUTTON_WIDTH);
  			btn.setPrefHeight(BUTTON_HEIGHT);
+ 			btn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+ 					" -fx-base: " + BTN_COLOR + ";" + 
+ 					" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 			
 			_btnLevels.add(btn);
 		}
 
-		// Create vbox, add all level buttons
-		_levelButtons = new VBox(BUTTON_SEPERATION);
-		_levelButtons.getChildren().addAll(_btnLevels);
-		_levelButtons.setPrefWidth(_window.GetWidth());
-		_levelButtons.setAlignment(Pos.CENTER);
-		_levelButtons.setTranslateY(_scrollPosition);
+		root.getChildren().addAll(_btnLevels);
+		root.setPrefWidth(_window.GetWidth());
+		root.setAlignment(Pos.CENTER);
+		root.setTranslateY(_scrollPosition);
 		
 		_timeline = new Timeline(new KeyFrame(Duration.millis(100), _scrollTimer));
-		_timeline.setCycleCount(Timeline.INDEFINITE);
-		
+		_timeline.setCycleCount(Timeline.INDEFINITE);		
 		_timeline.play();
 		
-		this.getChildren().add(_levelButtons);
+		this.getChildren().add(root);
+		
+		this._levelButtons = root;		
+		
+		// Set root node color
+		root.setStyle("-fx-background-color: " + BACK_COLOR + ";");
 	}
 	
 	private EventHandler<ActionEvent> _scrollTimer = new EventHandler<ActionEvent>() {
@@ -77,30 +90,30 @@ public class LevelSelectionScreen extends Parent {
 		public void handle(ActionEvent e) {
 			Point mousePoint = MouseInfo.getPointerInfo().getLocation();
 			Rectangle windowBounds = _window.GetBounds();
-			
+
 			if (windowBounds.contains(mousePoint)) {
 				Point relMousePoint = new Point(
-						(int) (mousePoint.getY() - windowBounds.getY()), 
+						(int) (mousePoint.getY() - windowBounds.getY() - 30), 
 						(int) (mousePoint.getX() - windowBounds.getX()));
-				
-				System.out.println("Tick: x = " + relMousePoint.getX() + ", y = " + relMousePoint.getY());
-				double dist = Double.MAX_VALUE;
-				double scrollSpeed = 0;
-				
-				if (relMousePoint.getX() < _window.GetHeight() / 2) {
-					// Distance between top and mouse
-					dist = relMousePoint.getX();
-				} else {
-					// Distance between bottom and mouse
-					dist = -(_window.GetHeight() - relMousePoint.getX());
-				}
-				
-				
-				if (Math.abs(dist) > SCROLL_EDGE_SIZE) {
-					scrollSpeed = SCROLL_SENSITIVITY / dist;	
-					_scrollPosition = _scrollPosition + scrollSpeed;
+
+				// Get distance to top or bottom of screen
+				double dist = relMousePoint.getX() < (_window.GetHeight() / 2) ? 
+						relMousePoint.getX() : _window.GetHeight() - relMousePoint.getX();
+				dist = Math.abs(dist);		
+								
+				System.out.println("dist = " + dist);		
+				if (Math.abs(dist) < SCROLL_EDGE_SIZE) {
+					double scrollSpeed = SCROLL_SENSITIVITY / dist;	
+					
+					if (relMousePoint.getX() < _window.GetHeight() / 2) {
+						_scrollPosition = _scrollPosition + scrollSpeed;
+					} else {
+						_scrollPosition = _scrollPosition - scrollSpeed;
+					}
+					
 					_scrollPosition = Math.min(0, _scrollPosition);
 					_scrollPosition = Math.max(-(_levelButtons.getHeight() - _window.GetHeight()), _scrollPosition);
+					System.out.println("v = " + scrollSpeed);
 					_levelButtons.setTranslateY(_scrollPosition);
 				}
 		

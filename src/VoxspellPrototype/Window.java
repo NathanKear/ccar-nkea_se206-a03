@@ -2,6 +2,7 @@ package VoxspellPrototype;
 
 import java.awt.Rectangle;
 
+import javafx.geometry.Bounds;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -42,10 +43,16 @@ public class Window {
 	}
 	
 	public Rectangle GetBounds() {
+		Bounds b = this._window.getScene().getRoot().localToScreen(this._window.getScene().getRoot().getBoundsInLocal());
 		return new Rectangle(
 				(int)this._window.getX(),
 				(int)this._window.getY(),
 				(int)this._window.getWidth(),
 				(int)this._window.getHeight());
+//		return new Rectangle(
+//				(int)b.getMinX(),
+//				(int)b.getMinY(),
+//				(int)b.getWidth(),
+//				(int)b.getHeight());
 	}
 }
