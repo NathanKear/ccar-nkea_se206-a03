@@ -108,16 +108,15 @@ public class VoxspellPrototype extends Application {
 	
 				//If the first char is % then its the name of the level
 				if(line.charAt(0) == '%') {
-					
+
 					//Set the level name and increase the counter by 1
 					levelKey = "level " + lvlCounter;
 					lvlCounter++;
-					
 					//Create the hashmap for that level
 					levelHashMap = new HashMap<String, int[]>();
 
 				} else {
-					
+
 					//Hashing each word to the level hashmap
 					levelHashMap.put(line, new int[3]);
 					
@@ -125,14 +124,14 @@ public class VoxspellPrototype extends Application {
 					nathansAwesomeDataStructure.put(levelKey, levelHashMap);
 					
 				}
-
 			}
+
 			textFileReader.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		nathansAwesomeDataStructure.put(levelKey, levelHashMap);
 		return nathansAwesomeDataStructure;
 	}
 }
