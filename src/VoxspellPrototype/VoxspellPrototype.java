@@ -12,6 +12,7 @@ public class VoxspellPrototype extends Application {
 	public static final String DARK = "#c9c9c9";
 	public static final int BTN_FONT_SIZE = 22;
 	public static final int TXT_FONT_SIZE = 30;
+	public static final int QUIZ_LENGTH = 10;
 	
 	private Window _window;
 	

@@ -4,7 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 public class WordList extends HashMap<String, HashMap<String, int[]>> {
 
@@ -74,5 +77,26 @@ public class WordList extends HashMap<String, HashMap<String, int[]>> {
 		}
 
 		return nathansAwesomeDataStructure;
+	}
+	
+	/**
+	 * Returns random selection of words from the wordlist specified.
+	 * @param wordlistName Name of the list to select random words
+	 * @param listCount Number of words to return
+	 * @return
+	 */
+	public List<String> GetRandomWords(String wordlistName, int listCount) {
+		// Get list of words from named wordlist
+		Collection<String> wordset = this.get(wordlistName).keySet();
+		List<String> wordlist = new ArrayList<String>(wordset);
+		
+		// Shuffle list
+		java.util.Collections.shuffle(wordlist);
+		
+		// Ensure we don't try to return more elements than exist in the list
+		listCount = Math.max(listCount, wordlist.size() - 1);
+		
+		// Return first n elements from shuffled list (essentially n random elements)
+		return wordlist.subList(0, listCount);
 	}
 }
