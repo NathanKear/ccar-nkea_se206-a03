@@ -31,4 +31,14 @@ public class VoxspellPrototype extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
+	
+	@Override
+	public void stop(){
+	    //Save words to disk
+		WordList wordList = WordList.GetWordList();
+		wordList.saveWordListToDisk();
+	}
+
+	
 }
+
