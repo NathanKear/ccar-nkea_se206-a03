@@ -6,9 +6,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.List;
 
 public class WordList extends HashMap<String, HashMap<String, int[]>> {
 
@@ -148,7 +151,7 @@ public class WordList extends HashMap<String, HashMap<String, int[]>> {
 				if(line.charAt(0) == '%') {
 
 					//Set the level name and increase the counter by 1
-					levelKey = "level " + lvlCounter;
+					levelKey = "Level " + (lvlCounter - 1);
 					lvlCounter++;
 
 					//Create the hashmap for that level
@@ -162,7 +165,6 @@ public class WordList extends HashMap<String, HashMap<String, int[]>> {
 					//Hashing the level hashmap to the overall hashmap
 					nathansAwesomeDataStructure.put(levelKey, levelHashMap);
 				}
-
 			}
 			textFileReader.close();
 		} catch (IOException e) {
@@ -172,5 +174,26 @@ public class WordList extends HashMap<String, HashMap<String, int[]>> {
 
 		nathansAwesomeDataStructure = loadStatsFromFile(nathansAwesomeDataStructure);
 		return nathansAwesomeDataStructure;
+	}
+	
+	/**
+	 * Returns random selection of words from the wordlist specified.
+	 * @param wordlistName Name of the list to select random words
+	 * @param listCount Number of words to return
+	 * @return
+	 */
+	public List<String> GetRandomWords(String wordlistName, int listCount) {
+		// Get list of words from named wordlist
+		Collection<String> wordset = this.get(wordlistName).keySet();
+		List<String> wordlist = new ArrayList<String>(wordset);
+		
+		// Shuffle list
+		java.util.Collections.shuffle(wordlist);
+		
+		// Ensure we don't try to return more elements than exist in the list
+		listCount = Math.min(listCount, wordlist.size() - 1);
+		
+		// Return first n elements from shuffled list (essentially n random elements)
+		return wordlist.subList(0, listCount);
 	}
 }

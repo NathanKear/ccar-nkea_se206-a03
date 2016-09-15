@@ -2,6 +2,7 @@ package VoxspellPrototype;
 
 
 import java.util.HashMap;
+import java.util.Set;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,7 +15,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
-
 
 public class StatisticsScreen extends Parent {
 	
@@ -110,7 +110,6 @@ public class StatisticsScreen extends Parent {
 				return new SimpleStringProperty("" + statsArray[2]);
 			}
 		});
-
 
 		ObservableList<HashMap.Entry<String, int[]>> items = FXCollections.observableArrayList(levelHashMap.entrySet());
 		final TableView<HashMap.Entry<String,int[]>> table = new TableView<>(items);

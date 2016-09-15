@@ -6,6 +6,14 @@ import javafx.stage.Stage;
 
 public class VoxspellPrototype extends Application {
 
+	public static final String LIGHT_BLUE = "#9ad3de";
+	public static final String DARK_BLUE = "#89bdd3";
+	public static final String WHITE = "#e3e3e3";
+	public static final String DARK = "#c9c9c9";
+	public static final int BTN_FONT_SIZE = 22;
+	public static final int TXT_FONT_SIZE = 30;
+	public static final int QUIZ_LENGTH = 10;
+	
 	private Window _window;
 	
 	private final String WINDOW_TITLE = "VoxSpell";
