@@ -15,19 +15,29 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
 
-public class Statistics extends Parent {
 
-	public Statistics(HashMap<String, HashMap<String, int[]>> dataStruct) {
-
+public class StatisticsScreen extends Parent {
+	
+	private Window _window;
+	
+	public StatisticsScreen(Window window) {
+		
+		this._window = window;
+		
 		//Getting the number of tabs to create
-		int numOfTabs = dataStruct.size();
-
+		int numOfTabs = WordList.GetWordList().size();
+		
 		//This will be the name of each tab
 		String tabName;
 
 		//Creating the pane to store the tabs
 		TabPane statsTabPane = new TabPane();
 
+		int tabWidth = _window.GetWidth()/(numOfTabs + 3);
+		statsTabPane.setTabMinWidth(tabWidth);
+		
+		statsTabPane.setStyle("-fx-base: #89bdd3");
+		
 		//Looping through the number of levels and creating a tab for each one
 		for(int i = 0; i < numOfTabs; i++) {
 			int levelUpTo = i + 1;
@@ -36,10 +46,13 @@ public class Statistics extends Parent {
 			t.setClosable(false);
 			statsTabPane.getTabs().add(t);
 
-			populateStatsTable(dataStruct, t, i + 1);
+			populateStatsTable(WordList.GetWordList(), t, i + 1);
 
 		}
 
+		statsTabPane.setMinHeight(_window.GetHeight());
+		statsTabPane.setMinWidth(_window.GetWidth());
+		
 		//Adding the statspane
 		this.getChildren().add(statsTabPane);
 
@@ -49,7 +62,6 @@ public class Statistics extends Parent {
 
 	private void populateStatsTable(HashMap<String, HashMap<String, int[]>> dataStruct, Tab tab, int index) {
 
-		System.out.println(index);
 		HashMap<String, int[]> levelHashMap = dataStruct.get("level " + (index + 1));
 
 		TableColumn<HashMap.Entry<String, int[]>, String> statsWordCol = new TableColumn<>("Word");
