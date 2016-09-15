@@ -49,10 +49,5 @@ public class Window {
 				(int)this._window.getY(),
 				(int)this._window.getWidth(),
 				(int)this._window.getHeight());
-//		return new Rectangle(
-//				(int)b.getMinX(),
-//				(int)b.getMinY(),
-//				(int)b.getWidth(),
-//				(int)b.getHeight());
 	}
 }

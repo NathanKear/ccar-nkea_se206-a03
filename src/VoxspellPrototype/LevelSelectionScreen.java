@@ -79,8 +79,11 @@ public class LevelSelectionScreen extends Parent {
  			
  			btn.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
-				public void handle(ActionEvent arg0) {
-					_window.SetWindowScene(new Scene(new QuizScreen(_window), _window.GetWidth(), _window.GetHeight()));
+				public void handle(ActionEvent e) {
+					if (e.getSource() instanceof Button) {
+						String btnName = ((Button)e.getSource()).getText();
+						_window.SetWindowScene(new Scene(new QuizScreen(_window, btnName), _window.GetWidth(), _window.GetHeight()));
+					}
 				}
  			});
 			

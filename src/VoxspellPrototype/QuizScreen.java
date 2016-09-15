@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -25,6 +26,7 @@ public class QuizScreen extends Parent {
 	private final String BTN_SPEAK_TEXT = "Speak";
 	private final String BTN_ENTER_TEXT = "Enter";
 	private final int HBX_SPACING = 10;
+	private final int VBX_SPACING = 50;
 	private final String BTN_COLOR = VoxspellPrototype.DARK_BLUE;
 	private final String BACK_COLOR = VoxspellPrototype.LIGHT_BLUE;
 	private final String BTN_FONT_COLOR = VoxspellPrototype.WHITE;
@@ -34,7 +36,7 @@ public class QuizScreen extends Parent {
 	private final int BTN_FONT_SIZE = VoxspellPrototype.BTN_FONT_SIZE;
 	private final int TFD_FONT_SIZE = VoxspellPrototype.BTN_FONT_SIZE;
 	private final int SIDE_PADDING = 10;
-	private final int TOP_BOTTOM_PADDING = 80;
+	private final int TOP_BOTTOM_PADDING = 60;
 	private final int BTN_WIDTH = 200;
 	private final int BTN_HEIGHT = 70;
 	private final int TFD_WIDTH = 300;
@@ -47,21 +49,21 @@ public class QuizScreen extends Parent {
 	private int _wordIndex = 0;
 	private boolean _firstGuess = true;
 	
-	public QuizScreen(Window window) {
+	public QuizScreen(Window window, String wordlistName) {
 		this._window = window;
 		
 		// Get words for this quiz
-		_words = WordList.GetWordList().GetRandomWords("level 1", VoxspellPrototype.QUIZ_LENGTH);
+		_words = WordList.GetWordList().GetRandomWords(wordlistName, VoxspellPrototype.QUIZ_LENGTH);
 		
 		// Create root pane and set its size to whole window
-		VBox root = new VBox(80);
+		VBox root = new VBox(VBX_SPACING);
 		root.setPrefWidth(_window.GetWidth());
 		root.setPrefHeight(_window.GetHeight());
 		root.setPadding(new Insets(TOP_BOTTOM_PADDING, SIDE_PADDING, TOP_BOTTOM_PADDING, SIDE_PADDING));
 		
 		
 		// Create quiz title text
-		_txtQuiz = new Text("Quiz");
+		_txtQuiz = new Text("Quiz\n\n");
 		_txtQuiz.prefWidth(_window.GetWidth());
 		_txtQuiz.setTextAlignment(TextAlignment.CENTER);
 		_txtQuiz.setWrappingWidth(_window.GetWidth());
@@ -69,7 +71,7 @@ public class QuizScreen extends Parent {
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 		
 		// Create score progress counter text
-		_txtProgress = new Text("Word 0/" + _words.size());
+		_txtProgress = new Text("\n0/" + _words.size());
 		_txtProgress.prefWidth(_window.GetWidth());
 		_txtProgress.setTextAlignment(TextAlignment.CENTER);
 		_txtProgress.setWrappingWidth(_window.GetWidth() - (SIDE_PADDING * 2));
@@ -156,17 +158,33 @@ public class QuizScreen extends Parent {
 	 * @return whether word is correct or not
 	 */
 	private boolean attemptWord(String word) {
-		if (!word.matches("[a-zA-Z ]+")) {
-			// Word attempt may only contain alphabet characters.
+		
+		_txtQuiz.setText("Quiz\n\n");
+		
+		word = word.trim();
+		
+		if (word.equals("")) {
+			// Word attempt must contain some characters		
+			_txtQuiz.setText("Quiz\n\nEnter a word"); 
 			
 			return false;
 		}
 		
 		if (word.contains(" ")) {
 			// Word attempt may not contain white space
+			_txtQuiz.setText("Quiz\n\nMay not contain spaces"); 
 			
 			return false;
 		}
+		
+		if (!word.matches("[a-zA-Z]+")) {
+			// Word attempt may only contain alphabet characters.
+			
+			_txtQuiz.setText("Quiz\n\nMay only contain letters"); 
+			
+			return false;
+		}
+
 		
 		boolean correct = (word.toLowerCase().equals(currentWord().toLowerCase()));
 		boolean advance = false;
@@ -213,11 +231,13 @@ public class QuizScreen extends Parent {
 			// There are words left to spell
 			_wordIndex++;
 			_firstGuess = true;
-			_txtProgress.setText("Word: " + _wordIndex + "/" + _words.size());
+			_txtProgress.setText("\n" + _wordIndex + "/" + _words.size());
 			
 			return true;
 		} else {
 			// No words left to spell
+			_window.SetWindowScene(new Scene(new MainScreen(_window), _window.GetWidth(), _window.GetHeight()));
+			
 			return false;
 		}
 	}

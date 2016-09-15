@@ -53,7 +53,7 @@ public class WordList extends HashMap<String, HashMap<String, int[]>> {
 				if(line.charAt(0) == '%') {
 					
 					//Set the level name and increase the counter by 1
-					levelKey = "level " + lvlCounter;
+					levelKey = "Level " + (lvlCounter - 1);
 					lvlCounter++;
 					
 					//Create the hashmap for that level
@@ -68,7 +68,6 @@ public class WordList extends HashMap<String, HashMap<String, int[]>> {
 					nathansAwesomeDataStructure.put(levelKey, levelHashMap);
 					
 				}
-
 			}
 			textFileReader.close();
 		} catch (IOException e) {
@@ -94,7 +93,7 @@ public class WordList extends HashMap<String, HashMap<String, int[]>> {
 		java.util.Collections.shuffle(wordlist);
 		
 		// Ensure we don't try to return more elements than exist in the list
-		listCount = Math.max(listCount, wordlist.size() - 1);
+		listCount = Math.min(listCount, wordlist.size() - 1);
 		
 		// Return first n elements from shuffled list (essentially n random elements)
 		return wordlist.subList(0, listCount);

@@ -152,6 +152,13 @@ public class MainScreen extends Parent {
 			}	
 		});
 		
+		btnStats.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				_window.SetWindowScene(new Scene(new StatisticsScreen(_window), _window.GetWidth(), _window.GetHeight()));
+			}	
+		});
+		
 		btnQuit.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
