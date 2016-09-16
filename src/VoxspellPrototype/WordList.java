@@ -151,7 +151,7 @@ public class WordList extends HashMap<String, HashMap<String, int[]>> {
 				if(line.charAt(0) == '%') {
 
 					//Set the level name and increase the counter by 1
-					levelKey = "Level " + (lvlCounter - 1);
+					levelKey = "Level " + lvlCounter;
 					lvlCounter++;
 
 					//Create the hashmap for that level
