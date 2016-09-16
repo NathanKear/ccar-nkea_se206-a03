@@ -68,8 +68,15 @@ public class LevelSelectionScreen extends Parent {
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 		root.getChildren().add(txtSelection);
 		
+		WordList wordlist = WordList.GetWordList();
+		ArrayList<String> levelName = new ArrayList<String>();
+		
+		for(int i = 0; i < wordlist.size(); i++) {
+			levelName.add(wordlist.get(i).levelName());
+		}
+		
 		// Add a button for each spelling list
-		for (String listName : WordList.GetWordList().keySet()) {
+		for (String listName : levelName) {
 			Button btn = new Button(listName);
 			btn.setPrefWidth(BTN_WIDTH);
  			btn.setPrefHeight(BTN_HEIGHT);
