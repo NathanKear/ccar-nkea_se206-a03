@@ -26,7 +26,7 @@ public class LevelSelectionScreen extends Parent {
 
 	private Window _window;
 	private List<Button> _btnLevels;	
-		
+
 	private final String TXT_SELECT_LEVEL = "\nPlease select starting level\n";
 	private final int BUTTON_SEPERATION = 6;
 	private final int SELECTION_BAR_PADDING = 10;
@@ -39,11 +39,12 @@ public class LevelSelectionScreen extends Parent {
 	private final int TXT_FONT_SIZE = VoxspellPrototype.TXT_FONT_SIZE;
 	private final int BTN_FONT_SIZE = VoxspellPrototype.BTN_FONT_SIZE;
 	private final String BTN_COLOR = VoxspellPrototype.DARK_BLUE;
+	private final String BTN_LOCKED_COLOR = VoxspellPrototype.DARK;
 	private final String BACK_COLOR = VoxspellPrototype.LIGHT_BLUE;
 	private final String BTN_FONT_COLOR = VoxspellPrototype.WHITE;
 	private final String TXT_FONT_COLOR = VoxspellPrototype.WHITE;
 	private final double TMR_TICK_RATE = 60.0;
-	
+
 	private VBox _levelButtons;
 	private double _scrollPosition = 0;
 	private Timeline _timeline;
@@ -52,45 +53,56 @@ public class LevelSelectionScreen extends Parent {
 		super();
 
 		this._window = window;
-		
+
 		// Create vbox, add all level buttons
 		VBox root = new VBox(BUTTON_SEPERATION);
-		
+
 		// Set root node size
 		root.setPrefWidth(_window.GetWidth());
 
 		_btnLevels = new ArrayList<Button>();
 		BTN_HEIGHT = _window.GetHeight() / BUTTONS_PER_SCREEN;
 		BTN_WIDTH = _window.GetWidth() * SELECTIONBAR_SCREENWIDTH_RATIO;
-		
+
 		Text txtSelection = new Text(TXT_SELECT_LEVEL);
 		txtSelection.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 		root.getChildren().add(txtSelection);
-		
+
 		WordList wordlist = WordList.GetWordList();
 		ArrayList<String> levelName = new ArrayList<String>();
-		
+
 		for(int i = 0; i < wordlist.size(); i++) {
 			levelName.add(wordlist.get(i).levelName());
-		}
-		
-		// Add a button for each spelling list
-		for (String listName : levelName) {
+			Level level = wordlist.get(i);
+			String listName = level.levelName();
+
 			Button btn = new Button(listName);
 			btn.setPrefWidth(BTN_WIDTH);
- 			btn.setPrefHeight(BTN_HEIGHT);
- 			btn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
- 					" -fx-base: " + BTN_COLOR + ";" + 
- 					" -fx-text-fill: " + BTN_FONT_COLOR + ";");
- 			
- 			btn.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent arg0) {
-					_window.SetWindowScene(new Scene(new QuizScreen(_window), _window.GetWidth(), _window.GetHeight()));
-				}
- 			});
-			
+			btn.setPrefHeight(BTN_HEIGHT);
+			if(level.isUnlocked()) {
+				btn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+						" -fx-base: " + BTN_COLOR + ";" + 
+						" -fx-text-fill: " + BTN_FONT_COLOR + ";");
+
+				btn.setOnAction(new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent arg0) {
+						_window.SetWindowScene(new Scene(new QuizScreen(_window), _window.GetWidth(), _window.GetHeight()));
+					}
+				});
+			} else {
+				btn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+						" -fx-base: " + BTN_LOCKED_COLOR + ";" + 
+						" -fx-text-fill: " + BTN_FONT_COLOR + ";");
+
+				btn.setOnAction(new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent arg0) {
+						PopupWindow.DeployPopupWindow("You need to unlock this level before you can use play it!");
+					}
+				});
+			}
 			_btnLevels.add(btn);
 		}
 
@@ -98,22 +110,22 @@ public class LevelSelectionScreen extends Parent {
 		root.setPrefWidth(_window.GetWidth());
 		root.setAlignment(Pos.CENTER);
 		root.setTranslateY(_scrollPosition);
-		
+
 		// Add padding around vbox (so buttons don't touch screen edge)
 		root.setPadding(new Insets(SELECTION_BAR_PADDING));
-		
+
 		_timeline = new Timeline(new KeyFrame(Duration.millis(1000 / TMR_TICK_RATE), _scrollTimer));
 		_timeline.setCycleCount(Timeline.INDEFINITE);		
 		_timeline.play();
-		
+
 		this.getChildren().add(root);
-		
+
 		this._levelButtons = root;		
-		
+
 		// Set root node color
 		root.setStyle("-fx-background-color: " + BACK_COLOR + ";");
 	}
-	
+
 	private EventHandler<ActionEvent> _scrollTimer = new EventHandler<ActionEvent>() {
 		@Override
 		public void handle(ActionEvent e) {
@@ -128,22 +140,22 @@ public class LevelSelectionScreen extends Parent {
 				// Get distance to top or bottom of screen
 				double dist = relMousePoint.getX() < (_window.GetHeight() / 2) ? 
 						relMousePoint.getX() : _window.GetHeight() - relMousePoint.getX();
-				dist = Math.abs(dist);		
-	
-				if (Math.abs(dist) < SCROLL_EDGE_SIZE) {
-					double scrollSpeed = SCROLL_SENSITIVITY / dist;	
-					
-					if (relMousePoint.getX() < _window.GetHeight() / 2) {
-						_scrollPosition = _scrollPosition + scrollSpeed;
-					} else {
-						_scrollPosition = _scrollPosition - scrollSpeed;
-					}
-					
-					_scrollPosition = Math.min(0, _scrollPosition);
-					_scrollPosition = Math.max(-(_levelButtons.getHeight() - _window.GetHeight()), _scrollPosition);
-					_levelButtons.setTranslateY(_scrollPosition);
-				}
-		
+						dist = Math.abs(dist);		
+
+						if (Math.abs(dist) < SCROLL_EDGE_SIZE) {
+							double scrollSpeed = SCROLL_SENSITIVITY / dist;	
+
+							if (relMousePoint.getX() < _window.GetHeight() / 2) {
+								_scrollPosition = _scrollPosition + scrollSpeed;
+							} else {
+								_scrollPosition = _scrollPosition - scrollSpeed;
+							}
+
+							_scrollPosition = Math.min(0, _scrollPosition);
+							_scrollPosition = Math.max(-(_levelButtons.getHeight() - _window.GetHeight()), _scrollPosition);
+							_levelButtons.setTranslateY(_scrollPosition);
+						}
+
 			}
 		}	
 	};
