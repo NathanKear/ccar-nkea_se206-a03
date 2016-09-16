@@ -12,6 +12,7 @@ class FestivalSpeakTask extends Task<Void> {
 
 	@Override
 	protected Void call() throws Exception {
+
 		new ProcessBuilder("/bin/bash", "-c", "echo \"" + _word + "\" | festival --tts").start();
 
 		return null;

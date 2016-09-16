@@ -86,6 +86,12 @@ public class LevelSelectionScreen extends Parent {
 					}
 				}
  			});
+ 			
+ 			
+ 			//TODO: check if level is disabled
+ 			if (false) {
+ 				btn.setDisable(true);
+ 			}
 			
 			_btnLevels.add(btn);
 		}
