@@ -6,11 +6,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
-public class WordList extends HashMap<String, HashMap<String, int[]>> {
+public class WordList extends ArrayList<Level> {
 
 	private static WordList _instance = null;
 
@@ -51,7 +54,8 @@ public class WordList extends HashMap<String, HashMap<String, int[]>> {
 
 			for(int i = 0; i < this.size(); i++) {
 				//Getting a level from the hash map
-				HashMap<String, int[]> levelMap = this.get("level " + (i + 1));
+				Level level = this.get(i);
+				HashMap<String, int[]> levelMap = level.getMap();
 
 				//Getting an iterator to go over all the words in the level hash map
 				Iterator<Map.Entry<String, int[]>> wordIterator = levelMap.entrySet().iterator();
@@ -69,7 +73,7 @@ public class WordList extends HashMap<String, HashMap<String, int[]>> {
 						//the loop should be broken out of
 						if(stats[k] != 0) {
 							String word = (String) pair.getKey();
-							textFileWriter.append("level " + i + " " + word + " " + stats[0] + " " + stats[1] + " " + stats[2]);
+							textFileWriter.append(level.levelName() + " " + word + " " + stats[0] + " " + stats[1] + " " + stats[2]);
 							break;
 						}
 					}
@@ -96,13 +100,18 @@ public class WordList extends HashMap<String, HashMap<String, int[]>> {
 					String[] wordAndStats = line.split("\\s+"); 
 					
 					//Getting the key for the level hash map
-					String levelKey = wordAndStats[0] + " " + wordAndStats[1];
+					int lengthOfLevelName = 1 + wordAndStats.length - 5;
+					String levelName = "";
+					for(int i = 0; i < lengthOfLevelName; i++) {
+						levelName += wordAndStats[i] + " ";
+					}
+					levelName.trim();
 					
 					//Getting the word to use as a key in the level map
 					String wordKey = wordAndStats[2];
 					
 					//Getting the level map
-					HashMap<String, int[]> levelMap = wordList.get(levelKey);
+					HashMap<String, int[]> levelMap = WordList.GetWordList().getLevelFromName(levelName);
 					
 					//Getting the stats paired with the word
 					int[] stats = levelMap.get(wordKey);
@@ -132,7 +141,8 @@ public class WordList extends HashMap<String, HashMap<String, int[]>> {
 
 		String line;
 		int lvlCounter = 1;
-		String levelKey = "";
+		String levelName = "";
+		boolean lastLineWasWord = false;
 
 		//Initialising the data structures
 		WordList nathansAwesomeDataStructure = new WordList();
@@ -147,23 +157,30 @@ public class WordList extends HashMap<String, HashMap<String, int[]>> {
 				//If the first char is % then its the name of the level
 				if(line.charAt(0) == '%') {
 
-					//Set the level name and increase the counter by 1
-					levelKey = "level " + lvlCounter;
-					lvlCounter++;
+					if(lastLineWasWord) {
+						Level level = new Level(levelName, levelHashMap);
+						nathansAwesomeDataStructure.add(level);
+					}
+					
+					levelName = line.substring(1, line.length());
 
 					//Create the hashmap for that level
 					levelHashMap = new HashMap<String, int[]>();
+					
+					lastLineWasWord = false;
 
 				} else {
 
 					//Hashing each word to the level hashmap
 					levelHashMap.put(line, new int[3]);
-
-					//Hashing the level hashmap to the overall hashmap
-					nathansAwesomeDataStructure.put(levelKey, levelHashMap);
+					
+					lastLineWasWord = true;
 				}
-
+				
 			}
+			//Adding the last level in to the list
+			Level level = new Level(levelName, levelHashMap);
+			nathansAwesomeDataStructure.add(level);
 			textFileReader.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -173,4 +190,89 @@ public class WordList extends HashMap<String, HashMap<String, int[]>> {
 		nathansAwesomeDataStructure = loadStatsFromFile(nathansAwesomeDataStructure);
 		return nathansAwesomeDataStructure;
 	}
+	
+	/**
+	 * Returns random selection of words from the wordlist specified.
+	 * @param wordlistName Name of the list to select random words
+	 * @param listCount Number of words to return
+	 * @return
+	 */
+	public List<String> GetRandomWords(String wordlistName, int listCount) {
+		List<String> wordlist = null;
+		
+		// Get list of words from named wordlist
+		HashMap<String, int[]> levelMap = getLevelFromName(wordlistName);
+		
+		Collection<String> wordset = levelMap.keySet();
+		wordlist = new ArrayList<String>(wordset);
+		
+		// Shuffle list
+		java.util.Collections.shuffle(wordlist);
+		
+		// Ensure we don't try to return more elements than exist in the list
+		listCount = Math.max(listCount, wordlist.size() - 1);
+		
+		// Return first n elements from shuffled list (essentially n random elements)
+		return wordlist.subList(0, listCount);
+	}
+	
+	public void failedWord(String word, String wordlistName) {
+		//Get list of words from wordlist
+		HashMap<String, int[]> levelMap = getLevelFromName(wordlistName);
+				
+		//Getting the stats array associated with the word
+		int[] stats = levelMap.get(word);
+		
+		//Increasing the failed count by 1
+		stats[0] += 1;	
+		
+		//Putting the word back in the table with the updated stats
+		levelMap.put(word, stats);
+		
+	}
+	
+	public void faultedWord(String word, String wordlistName) {
+		//Get list of words from wordlist
+		HashMap<String, int[]> levelMap = getLevelFromName(wordlistName);
+				
+		//Getting the stats array associated with the word
+		int[] stats = levelMap.get(word);
+		
+		//Increasing the faulted count by 1
+		stats[1] += 1;	
+		
+		//Putting the word back in the table with the updated stats
+		levelMap.put(word, stats);
+
+	}
+	
+	public void masteredWord(String word, String wordlistName) {
+		
+		//Get list of words from wordlist
+		HashMap<String, int[]> levelMap = getLevelFromName(wordlistName);
+				
+		//Getting the stats array associated with the word
+		int[] stats = levelMap.get(word);
+		
+		//Increasing the mastered count by 1
+		stats[2] += 1;	
+			
+		//Putting the word back in the table with the updated stats
+		levelMap.put(word, stats);
+
+	}
+	
+	private HashMap<String, int[]> getLevelFromName(String name) {
+		HashMap<String, int[]> levelMap = null;
+
+		for(int i = 0; i < this.size(); i++) {
+			String levelName;
+			if((levelName  = this.get(i).levelName()).equals("wordlistName")) {
+				Level level = this.get(i);
+				levelMap = level.getMap();
+			}
+		}
+		return levelMap;
+	}
+	
 }

@@ -24,8 +24,11 @@ public class StatisticsScreen extends Parent {
 		
 		this._window = window;
 		
+		//Getting the WordList
+		WordList wordlist = WordList.GetWordList();
+		
 		//Getting the number of tabs to create
-		int numOfTabs = WordList.GetWordList().size();
+		int numOfTabs = wordlist.size();
 		
 		//This will be the name of each tab
 		String tabName;
@@ -40,13 +43,12 @@ public class StatisticsScreen extends Parent {
 		
 		//Looping through the number of levels and creating a tab for each one
 		for(int i = 0; i < numOfTabs; i++) {
-			int levelUpTo = i + 1;
-			tabName = "Level " + levelUpTo;
+			tabName = wordlist.get(i).levelName();
 			Tab t = new Tab(tabName);
 			t.setClosable(false);
 			statsTabPane.getTabs().add(t);
 
-			populateStatsTable(WordList.GetWordList(), t, i + 1);
+			populateStatsTable(wordlist.get(i), t, i + 1);
 
 		}
 
@@ -60,9 +62,10 @@ public class StatisticsScreen extends Parent {
 
 	}
 
-	private void populateStatsTable(HashMap<String, HashMap<String, int[]>> dataStruct, Tab tab, int index) {
+	private void populateStatsTable(Level level, Tab tab, int index) {
+	
 
-		HashMap<String, int[]> levelHashMap = dataStruct.get("level " + (index + 1));
+		HashMap<String, int[]> levelHashMap = level.getMap();
 
 		TableColumn<HashMap.Entry<String, int[]>, String> statsWordCol = new TableColumn<>("Word");
 		statsWordCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<HashMap.Entry<String, int[]>, String>, ObservableValue<String>>() {
