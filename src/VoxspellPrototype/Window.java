@@ -42,6 +42,11 @@ public class Window {
 		_window.setScene(scene);
 	}
 	
+	public void SetWindowPosition(int x, int y) {
+		_window.setX(x);
+		_window.setY(y);
+	}
+	
 	public void SetWindowTitle(String title) {
 		_window.setTitle(title);
 	}

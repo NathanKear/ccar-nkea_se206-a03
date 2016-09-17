@@ -14,6 +14,7 @@ public class VoxspellPrototype extends Application {
 	public static final String MEDIA_SOURCE = "/home/nathan/workspace/ccar-nkea_se206-a03/media/bunny.mp4";
 	public static final int BTN_FONT_SIZE = 22;
 	public static final int TXT_FONT_SIZE = 30;
+	public static final int TXT_FONT_SIZE_FINE = 18;
 	public static final int QUIZ_LENGTH = 10;
 	
 	private Window _window;

@@ -214,7 +214,6 @@ public class WordList extends ArrayList<Level> {
 
 		listCount = Math.min(listCount, wordlist.size() - 1);
 		
-		Collection<String> wordset = level.getFailedWords();
 		wordlist = new ArrayList<String>(wordset);
 
 		// Shuffle list

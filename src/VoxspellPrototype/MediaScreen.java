@@ -62,28 +62,6 @@ public class MediaScreen extends Parent {
     	
     	btnPause.setFont(new Font("Arial", Font.PLAIN, VoxspellPrototype.BTN_FONT_SIZE));
     	btnLeave.setFont(new Font("Arial", Font.PLAIN, VoxspellPrototype.BTN_FONT_SIZE));
-    	
-//    	btnPause.setBorder(new Border() {
-//
-//			@Override
-//			public Insets getBorderInsets(Component arg0) {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//
-//			@Override
-//			public boolean isBorderOpaque() {
-//				// TODO Auto-generated method stub
-//				return false;
-//			}
-//
-//			@Override
-//			public void paintBorder(Component arg0, Graphics arg1, int arg2, int arg3, int arg4, int arg5) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//    		
-//    	});
         
     	btnPause.addActionListener(new ActionListener() {
 			@Override
@@ -105,6 +83,7 @@ public class MediaScreen extends Parent {
 					@Override
 					public void run() {
 						_window.SetWindowScene(new Scene(new MainScreen(_window), _window.GetWidth(), _window.GetHeight()));
+						_window.SetWindowPosition(frame.getX(), frame.getY());
 						_window.Show(true);
 					}
 				});
@@ -117,6 +96,7 @@ public class MediaScreen extends Parent {
         _mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
         _mediaPlayer = _mediaPlayerComponent.getMediaPlayer();
         
+        frame.setResizable(false);
         frame.setLayout(new BorderLayout());
         frame.add(_mediaPlayerComponent, BorderLayout.CENTER);
         frame.add(btnPause, BorderLayout.NORTH);

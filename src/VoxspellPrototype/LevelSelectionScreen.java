@@ -77,7 +77,7 @@ public class LevelSelectionScreen extends Parent {
 			Level level = wordlist.get(i);
 			String listName = level.levelName();
 
-			Button btn = new Button(listName);
+			final Button btn = new Button(listName);
 			btn.setPrefWidth(BTN_WIDTH);
 
 			btn.setPrefHeight(BTN_HEIGHT);
@@ -89,7 +89,7 @@ public class LevelSelectionScreen extends Parent {
 				btn.setOnAction(new EventHandler<ActionEvent>() {
 					@Override
 					public void handle(ActionEvent arg0) {
-						_window.SetWindowScene(new Scene(new QuizScreen(_window), _window.GetWidth(), _window.GetHeight()));
+						_window.SetWindowScene(new Scene(new QuizScreen(_window, btn.getText()), _window.GetWidth(), _window.GetHeight()));
 					}
 				});
 			} else {
