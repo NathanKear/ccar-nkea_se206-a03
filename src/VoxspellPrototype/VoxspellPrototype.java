@@ -2,8 +2,10 @@ package VoxspellPrototype;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class VoxspellPrototype extends Application {
 
@@ -31,6 +33,16 @@ public class VoxspellPrototype extends Application {
 		Platform.setImplicitExit(false);
 		
 		stage.setResizable(false);
+		
+		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+
+			@Override
+			public void handle(WindowEvent arg0) {
+				Platform.exit();
+			}
+			
+		});
+		
 		_window = new Window(stage, WINDOW_WIDTH, WINDOW_HEIGHT);
 		
 		_window.SetWindowTitle(WINDOW_TITLE);	
@@ -51,5 +63,6 @@ public class VoxspellPrototype extends Application {
 		WordList wordList = WordList.GetWordList();
 		wordList.saveWordListToDisk();
 	}
+	
 }
 
