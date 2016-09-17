@@ -25,6 +25,7 @@ public class WordList extends ArrayList<Level> {
 	public static WordList GetWordList() {
 		if (_instance == null) {
 			_instance = initialiseNathansAwesomeDataStructure("NZCER-spelling-lists.txt");
+			loadStatsFromFile(_instance);
 		}
 
 		return _instance;
@@ -47,9 +48,8 @@ public class WordList extends ArrayList<Level> {
 
 		try {
 
-			if(!f.exists()) {
-				f.createNewFile();
-			}
+			f.delete();
+			f.createNewFile();
 
 			BufferedWriter textFileWriter = new BufferedWriter(new FileWriter(f));
 
@@ -74,12 +74,21 @@ public class WordList extends ArrayList<Level> {
 						//the loop should be broken out of
 						if(stats[k] != 0) {
 							String word = (String) pair.getKey();
-							textFileWriter.append(level.levelName() + " " + word + " " + stats[0] + " " + stats[1] + " " + stats[2]);
+							textFileWriter.append(level.levelName() + " " + word + " " + stats[0] + " " + stats[1] + " " + stats[2] + "\n");
 							break;
 						}
 					}
 				}
 			}
+
+			for(int i = 0; i < this.size(); i++) {
+				//Getting a level from the hash map
+				Level level = this.get(i);
+				if(level.isUnlocked()) {
+					textFileWriter.append("unlock " + level.levelName() + "\n");
+				}
+			}
+
 			textFileWriter.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -89,6 +98,8 @@ public class WordList extends ArrayList<Level> {
 	private static WordList loadStatsFromFile(WordList wordList) {
 		File savedWords = new File("Word-Log");
 
+		WordList wordlist = WordList.GetWordList();
+
 		try {
 
 			//Reading words from file if they exist
@@ -97,35 +108,51 @@ public class WordList extends ArrayList<Level> {
 
 				String line = "";
 				while((line = statsReader.readLine()) != null) {
-					//Splitting each line by spaces
-					String[] wordAndStats = line.split("\\s+"); 
+					if(line.contains("unlock")) {
+						line = line.replaceAll("unlock ", "");
+						for(int i = 0 ; i < wordlist.size(); i++) {
+							Level level = wordList.get(i);
+							String levelName = level.levelName();
+							if(levelName.equals(line)) {
+								level.unlockLevel();
+							}
+						}
+					} else {
+						//Splitting each line by spaces
+						String[] wordAndStats = line.split("\\s+"); 
 
-					//Getting the key for the level hash map
-					int lengthOfLevelName = 1 + wordAndStats.length - 5;
-					String levelName = "";
-					for(int i = 0; i < lengthOfLevelName; i++) {
-						levelName += wordAndStats[i] + " ";
+						//Getting the key for the level hash map
+						int lengthOfLevelName = 1 + wordAndStats.length - 5;
+						String levelName = "";
+						for(int i = 0; i < lengthOfLevelName; i++) {
+							if(i != lengthOfLevelName - 1) {
+								levelName += wordAndStats[i] + " ";
+							} else {
+								levelName += wordAndStats[i];	
+							}
+						}
+						levelName.trim();
+
+						//Getting the word to use as a key in the level map
+						String wordKey = wordAndStats[2];
+
+						//Getting the level map
+						Level level = wordlist.getLevelFromName(levelName);
+						HashMap<String, int[]> levelMap = level.getMap();
+
+						//Getting the stats paired with the word
+						int[] stats = levelMap.get(wordKey);
+
+						//Set each of the stats to be what they are from file
+						stats[0] = Integer.parseInt(wordAndStats[5 - lengthOfLevelName]);
+						stats[1] = Integer.parseInt(wordAndStats[5 - lengthOfLevelName + 1]);
+						stats[2] = Integer.parseInt(wordAndStats[5 - lengthOfLevelName + 2]);
+
+						//Hash the stats and word back into the hashmap
+						levelMap.put(wordKey, stats);
+
 					}
-					levelName.trim();
-
-					//Getting the word to use as a key in the level map
-					String wordKey = wordAndStats[2];
-
-					//Getting the level map
-					HashMap<String, int[]> levelMap = WordList.GetWordList().getLevelFromName(levelName).getMap();
-
-					//Getting the stats paired with the word
-					int[] stats = levelMap.get(wordKey);
-
-					//Set each of the stats to be what they are from file
-					stats[0] = Integer.parseInt(wordAndStats[3]);
-					stats[1] = Integer.parseInt(wordAndStats[4]);
-					stats[2] = Integer.parseInt(wordAndStats[5]);
-
-					//Hash the stats and word back into the hashmap
-					levelMap.put(wordKey, stats);
 				}
-
 				statsReader.close();
 			}
 		} catch (IOException e) {
@@ -188,7 +215,7 @@ public class WordList extends ArrayList<Level> {
 			e.printStackTrace();
 		}
 
-		nathansAwesomeDataStructure = loadStatsFromFile(nathansAwesomeDataStructure);
+		//		nathansAwesomeDataStructure = loadStatsFromFile(nathansAwesomeDataStructure);
 		return nathansAwesomeDataStructure;
 	}
 
@@ -211,17 +238,7 @@ public class WordList extends ArrayList<Level> {
 		java.util.Collections.shuffle(wordlist);
 
 		// Ensure we don't try to return more elements than exist in the list
-
 		listCount = Math.min(listCount, wordlist.size() - 1);
-		
-		Collection<String> wordset = level.getFailedWords();
-		wordlist = new ArrayList<String>(wordset);
-
-		// Shuffle list
-		java.util.Collections.shuffle(wordlist);
-
-		// Ensure we don't try to return more elements than exist in the list
-		listCount = Math.max(listCount, wordlist.size() - 1);
 
 		// Return first n elements from shuffled list (essentially n random elements)
 		return wordlist.subList(0, listCount);
@@ -238,7 +255,7 @@ public class WordList extends ArrayList<Level> {
 		int[] stats = levelMap.get(word);
 
 		//Increasing the failed count by 1
-		stats[0] += 1;	
+		stats[0]++;	
 
 		//Adding the word to the failed list in the level
 		level.addToFailed(word);
@@ -294,7 +311,7 @@ public class WordList extends ArrayList<Level> {
 		Level level = null;
 		for(int i = 0; i < this.size(); i++) {
 			String levelName;
-			if((levelName  = this.get(i).levelName()).equals("wordlistName")) {
+			if((levelName  = this.get(i).levelName()).equals(name)) {
 				level = this.get(i);
 			}
 		}

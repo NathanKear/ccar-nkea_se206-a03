@@ -3,12 +3,19 @@ package VoxspellPrototype;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -16,10 +23,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class LevelSelectionScreen extends Parent {
@@ -53,6 +60,101 @@ public class LevelSelectionScreen extends Parent {
 		super();
 
 		this._window = window;
+		
+		BTN_HEIGHT = _window.GetHeight() / BUTTONS_PER_SCREEN;
+		BTN_WIDTH = _window.GetWidth() * SELECTIONBAR_SCREENWIDTH_RATIO;
+		
+		//If the user is opening the application for the first time...
+		File wordlog = new File("Word-Log");
+		
+		if(!wordlog.exists()) {
+			System.out.println("doesnt exist");
+			ChooseLevelScreen();
+		}
+		
+		try {
+			BufferedReader r = new BufferedReader(new FileReader(wordlog));
+			
+			if(r.readLine() == null) {
+				ChooseLevelScreen();
+			} else {
+				GenerateLevelSelectionScreen();
+			}
+			
+			r.close();
+		} catch (IOException e) {
+
+		}
+		
+
+	}
+	
+	private void ChooseLevelScreen() {
+		final WordList wordlist = WordList.GetWordList();
+		
+		ObservableList<String> options = FXCollections.observableArrayList();
+		for(int i = 0; i < wordlist.size(); i++) {
+			Level level = wordlist.get(i);
+			String levelName = level.levelName();
+			options.add(levelName);
+		}
+		
+		final ComboBox<String> levelSelect = new ComboBox<String>(options);
+		
+		VBox root = new VBox(BUTTON_SEPERATION);
+
+		// Set root node size
+		root.setPrefWidth(_window.GetWidth());
+						
+		Label levelSelectLabel = new Label("Please select which level you wish to start at. All levels below "
+				+ "the level you choose, and the level itself, will be unlocked!");
+		levelSelectLabel.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
+				" -fx-fill: " + TXT_FONT_COLOR + ";");
+		levelSelectLabel.setWrapText(true);
+		root.setStyle("-fx-background-color: " + BACK_COLOR);
+		
+		root.setPadding(new Insets(SELECTION_BAR_PADDING));
+		
+		root.setPrefHeight(_window.GetHeight());
+		root.setPrefWidth(_window.GetWidth());
+		
+		root.getChildren().addAll(levelSelectLabel, levelSelect);
+		
+		this.getChildren().add(root);
+		
+		levelSelect.setPromptText("Select a level");
+		levelSelect.setStyle("-fx-base: " + BTN_COLOR + "; -fx-fill: " + TXT_FONT_COLOR);
+		levelSelect.autosize();
+				
+		levelSelect.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+
+			@Override
+			public void changed(ObservableValue<? extends String> arg0,
+					String oldValue, String newValue) {
+				boolean levelFound = false;
+				for(int i = 0; i < wordlist.size(); i++) {
+					Level level = wordlist.get(i);
+					String levelName = level.levelName();
+					
+					if(!levelFound) {
+						level.unlockLevel();
+					}
+					
+					if(levelName.equals(newValue)) {
+						levelFound = true;
+					}
+				}
+				GenerateLevelSelectionScreen();
+			}
+
+
+		});
+			
+	}
+	
+	private void GenerateLevelSelectionScreen() {
+		
+		WordList wordlist = WordList.GetWordList();
 
 		// Create vbox, add all level buttons
 		VBox root = new VBox(BUTTON_SEPERATION);
@@ -61,21 +163,19 @@ public class LevelSelectionScreen extends Parent {
 		root.setPrefWidth(_window.GetWidth());
 
 		_btnLevels = new ArrayList<Button>();
-		BTN_HEIGHT = _window.GetHeight() / BUTTONS_PER_SCREEN;
-		BTN_WIDTH = _window.GetWidth() * SELECTIONBAR_SCREENWIDTH_RATIO;
 
 		Text txtSelection = new Text(TXT_SELECT_LEVEL);
 		txtSelection.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 		root.getChildren().add(txtSelection);
 
-		WordList wordlist = WordList.GetWordList();
+		wordlist = WordList.GetWordList();
 		ArrayList<String> levelName = new ArrayList<String>();
 
 		for(int i = 0; i < wordlist.size(); i++) {
 			levelName.add(wordlist.get(i).levelName());
 			Level level = wordlist.get(i);
-			String listName = level.levelName();
+			final String listName = level.levelName();
 
 			Button btn = new Button(listName);
 			btn.setPrefWidth(BTN_WIDTH);
@@ -89,7 +189,7 @@ public class LevelSelectionScreen extends Parent {
 				btn.setOnAction(new EventHandler<ActionEvent>() {
 					@Override
 					public void handle(ActionEvent arg0) {
-						_window.SetWindowScene(new Scene(new QuizScreen(_window), _window.GetWidth(), _window.GetHeight()));
+						_window.SetWindowScene(new Scene(new QuizScreen(_window, listName), _window.GetWidth(), _window.GetHeight()));
 					}
 				});
 			} else {
