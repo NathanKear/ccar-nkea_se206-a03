@@ -34,7 +34,7 @@ public class LevelSelectionScreen extends Parent {
 	private Window _window;
 	private List<Button> _btnLevels;	
 
-	private final String TXT_SELECT_LEVEL = "\nPlease select starting level\n";
+	private final String TXT_SELECT_LEVEL = "\nSelect a level\n";
 	private final int BUTTON_SEPERATION = 6;
 	private final int SELECTION_BAR_PADDING = 10;
 	private final double SELECTIONBAR_SCREENWIDTH_RATIO = 0.666;	

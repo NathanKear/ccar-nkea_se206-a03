@@ -238,15 +238,7 @@ public class WordList extends ArrayList<Level> {
 		java.util.Collections.shuffle(wordlist);
 
 		// Ensure we don't try to return more elements than exist in the list
-		listCount = Math.min(listCount, wordlist.size() - 1);
-		
-		wordlist = new ArrayList<String>(wordset);
-
-		// Shuffle list
-		java.util.Collections.shuffle(wordlist);
-
-		// Ensure we don't try to return more elements than exist in the list
-		listCount = Math.max(listCount, wordlist.size() - 1);
+		listCount = Math.min(listCount, wordlist.size());
 
 		// Return first n elements from shuffled list (essentially n random elements)
 		return wordlist.subList(0, listCount);
@@ -325,5 +317,4 @@ public class WordList extends ArrayList<Level> {
 		}
 		return level;
 	}
-
 }

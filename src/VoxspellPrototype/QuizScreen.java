@@ -49,6 +49,7 @@ public class QuizScreen extends Parent {
 	private List<String> _words;
 	private int _wordIndex = 0;
 	private boolean _firstGuess = true;
+	private int _masteredWords = 0;
 	
 	public QuizScreen(Window window, String wordlistName) {
 		this._window = window;
@@ -196,6 +197,7 @@ public class QuizScreen extends Parent {
 		if (_firstGuess) {
 			if (correct) {
 				// Correct on first guess
+				_masteredWords++;
 				speechOutput = speechOutput + "Correct.";
 				WordList.GetWordList().masteredWord(currentWord(), _level);
 				advance = true;
@@ -237,7 +239,7 @@ public class QuizScreen extends Parent {
 			// There are words left to spell
 			_wordIndex++;
 			_firstGuess = true;
-			_txtProgress.setText("\n" + _wordIndex + "/" + _words.size());
+			_txtProgress.setText("\n" + _masteredWords + "/" + _words.size());
 			
 			return true;
 		} else {
