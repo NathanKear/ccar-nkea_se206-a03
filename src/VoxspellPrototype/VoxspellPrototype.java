@@ -1,6 +1,7 @@
 package VoxspellPrototype;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -10,6 +11,7 @@ public class VoxspellPrototype extends Application {
 	public static final String DARK_BLUE = "#89bdd3";
 	public static final String WHITE = "#e3e3e3";
 	public static final String DARK = "#c9c9c9";
+	public static final String MEDIA_SOURCE = "/home/nathan/workspace/ccar-nkea_se206-a03/media/bunny.mp4";
 	public static final int BTN_FONT_SIZE = 22;
 	public static final int TXT_FONT_SIZE = 30;
 	public static final int QUIZ_LENGTH = 10;
@@ -25,6 +27,8 @@ public class VoxspellPrototype extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
+		Platform.setImplicitExit(false);
+		
 		stage.setResizable(false);
 		_window = new Window(stage, WINDOW_WIDTH, WINDOW_HEIGHT);
 		
@@ -33,7 +37,7 @@ public class VoxspellPrototype extends Application {
 		_window.SetWindowScene(new Scene(new MainScreen(_window), _window.GetWidth(), _window.GetHeight()));
 		
 		_window.CenterOnScreen();
-		_window.Show();
+		_window.Show(true);
 	}
 
 	public static void main(String[] args) {
@@ -46,7 +50,5 @@ public class VoxspellPrototype extends Application {
 		WordList wordList = WordList.GetWordList();
 		wordList.saveWordListToDisk();
 	}
-
-	
 }
 

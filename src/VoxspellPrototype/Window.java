@@ -19,6 +19,18 @@ public class Window {
 		return _height;
 	}
 	
+	public int GetPosX() {
+		return (int)this._window.getX();
+	}
+	
+	public int GetPosY() {
+		return (int)this._window.getY();
+	}
+	
+	public Stage GetWindowStage() {
+		return _window;
+	}
+	
 	public Window(Stage window, int width, int height) {
 		this._window = window;
 
@@ -34,8 +46,12 @@ public class Window {
 		_window.setTitle(title);
 	}
 	
-	public void Show() {
-		_window.show();
+	public void Show(boolean show) {
+		if (show) {
+			_window.show();
+		} else {
+			_window.hide();
+		}
 	}
 	
 	public void CenterOnScreen() {
