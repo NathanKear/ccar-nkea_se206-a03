@@ -44,6 +44,7 @@ public class QuizScreen extends Parent {
 	private final Text _txtQuiz;
 	private final Text _txtProgress;
 	private TextField _tfdAttempt;
+	private String _level;
 	
 	private List<String> _words;
 	private int _wordIndex = 0;
@@ -51,6 +52,8 @@ public class QuizScreen extends Parent {
 	
 	public QuizScreen(Window window, String wordlistName) {
 		this._window = window;
+		
+		_level = wordlistName;
 		
 		// Get words for this quiz
 		_words = WordList.GetWordList().GetRandomWords(wordlistName, VoxspellPrototype.QUIZ_LENGTH);
@@ -194,6 +197,7 @@ public class QuizScreen extends Parent {
 			if (correct) {
 				// Correct on first guess
 				speechOutput = speechOutput + "Correct.";
+				WordList.GetWordList().masteredWord(currentWord(), _level);
 				advance = true;
 			} else {
 				// Incorrect on first guess
@@ -204,10 +208,12 @@ public class QuizScreen extends Parent {
 			if (correct) {
 				// Correct on second guess
 				speechOutput = speechOutput + "Correct.";
+				WordList.GetWordList().faultedWord(currentWord(), _level);
 				advance = true;
 			} else {
 				// Incorrect on second guess
 				speechOutput = speechOutput + "Incorrect.";
+				WordList.GetWordList().failedWord(currentWord(), _level);
 				advance = true;
 			}
 		}
