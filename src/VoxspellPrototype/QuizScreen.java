@@ -75,7 +75,7 @@ public class QuizScreen extends Parent {
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 		
 		// Create score progress counter text
-		_txtProgress = new Text("\n0/" + _words.size());
+		_txtProgress = new Text("\nCorrect: 0/" + _words.size());
 		_txtProgress.prefWidth(_window.GetWidth());
 		_txtProgress.setTextAlignment(TextAlignment.CENTER);
 		_txtProgress.setWrappingWidth(_window.GetWidth() - (SIDE_PADDING * 2));
@@ -239,12 +239,12 @@ public class QuizScreen extends Parent {
 			// There are words left to spell
 			_wordIndex++;
 			_firstGuess = true;
-			_txtProgress.setText("\n" + _masteredWords + "/" + _words.size());
+			_txtProgress.setText("\nCorrect: " + _masteredWords + "/" + _words.size());
 			
 			return true;
 		} else {
 			// No words left to spell
-			_window.SetWindowScene(new Scene(new MainScreen(_window), _window.GetWidth(), _window.GetHeight()));
+			_window.SetWindowScene(new Scene(new ResultsScreen(_window, _masteredWords, _words.size()), _window.GetWidth(), _window.GetHeight()));
 			
 			return false;
 		}
