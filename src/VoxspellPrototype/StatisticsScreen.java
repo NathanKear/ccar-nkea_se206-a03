@@ -20,6 +20,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
 import javafx.util.Callback;
 
 public class StatisticsScreen extends Parent {
@@ -47,9 +48,13 @@ public class StatisticsScreen extends Parent {
 		//This will be the name of each tab
 		String tabName;
 
+		BorderPane bp = new BorderPane();
+				
 		//Creating the pane to store the tabs
 		TabPane statsTabPane = new TabPane();
 
+		bp.setCenter(statsTabPane);
+		
 		int tabWidth = _window.GetWidth()/(numOfTabs + 3);
 		statsTabPane.setTabMinWidth(tabWidth);
 		

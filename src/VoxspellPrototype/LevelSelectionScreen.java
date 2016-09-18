@@ -56,76 +56,87 @@ public class LevelSelectionScreen extends Parent {
 	private double _scrollPosition = 0;
 	private Timeline _timeline;
 
-	public LevelSelectionScreen(Window window) {
+	private QuizType _quizType;
+
+	public enum QuizType {
+		REVIEW_QUIZ, NORMAL_QUIZ
+	}
+
+	public LevelSelectionScreen(Window window, String quizType) {
 		super();
 
+		if(quizType.equals("Review_Quiz")) {
+			_quizType = QuizType.REVIEW_QUIZ;
+		} else if (quizType.equals("Normal_Quiz")) {
+			_quizType = QuizType.NORMAL_QUIZ;
+		}
+
 		this._window = window;
-		
+
 		BTN_HEIGHT = _window.GetHeight() / BUTTONS_PER_SCREEN;
 		BTN_WIDTH = _window.GetWidth() * SELECTIONBAR_SCREENWIDTH_RATIO;
-		
+
 		//If the user is opening the application for the first time...
 		File wordlog = new File("Word-Log");
-		
+
 		if(!wordlog.exists()) {
-			System.out.println("doesnt exist");
 			ChooseLevelScreen();
 		}
-		
+
 		try {
 			BufferedReader r = new BufferedReader(new FileReader(wordlog));
-			
+
 			if(r.readLine() == null) {
 				ChooseLevelScreen();
 			} else {
 				GenerateLevelSelectionScreen();
 			}
-			
+
 			r.close();
 		} catch (IOException e) {
 
 		}
-		
+
 
 	}
-	
+
 	private void ChooseLevelScreen() {
 		final WordList wordlist = WordList.GetWordList();
-		
+
 		ObservableList<String> options = FXCollections.observableArrayList();
 		for(int i = 0; i < wordlist.size(); i++) {
 			Level level = wordlist.get(i);
 			String levelName = level.levelName();
 			options.add(levelName);
 		}
-		
+
 		final ComboBox<String> levelSelect = new ComboBox<String>(options);
-		
+
 		VBox root = new VBox(BUTTON_SEPERATION);
 
 		// Set root node size
 		root.setPrefWidth(_window.GetWidth());
-						
+
 		Label levelSelectLabel = new Label("Please select which level you wish to start at. All levels below "
 				+ "the level you choose, and the level itself, will be unlocked!");
 		levelSelectLabel.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 		levelSelectLabel.setWrapText(true);
 		root.setStyle("-fx-background-color: " + BACK_COLOR);
-		
+
 		root.setPadding(new Insets(SELECTION_BAR_PADDING));
-		
+
 		root.setPrefHeight(_window.GetHeight());
 		root.setPrefWidth(_window.GetWidth());
-		
+
 		root.getChildren().addAll(levelSelectLabel, levelSelect);
-		
+
 		this.getChildren().add(root);
-		
+
 		levelSelect.setPromptText("Select a level");
 		levelSelect.setStyle("-fx-base: " + BTN_COLOR + "; -fx-fill: " + TXT_FONT_COLOR);
 		levelSelect.autosize();
-				
+
 		levelSelect.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 
 			@Override
@@ -135,11 +146,11 @@ public class LevelSelectionScreen extends Parent {
 				for(int i = 0; i < wordlist.size(); i++) {
 					Level level = wordlist.get(i);
 					String levelName = level.levelName();
-					
+
 					if(!levelFound) {
 						level.unlockLevel();
 					}
-					
+
 					if(levelName.equals(newValue)) {
 						levelFound = true;
 					}
@@ -149,20 +160,38 @@ public class LevelSelectionScreen extends Parent {
 
 
 		});
-			
+
 	}
-	
+
 	private void GenerateLevelSelectionScreen() {
-		
+
 		WordList wordlist = WordList.GetWordList();
 
 		// Create vbox, add all level buttons
 		VBox root = new VBox(BUTTON_SEPERATION);
 
+		Button returnToMenuBtn = new Button("Return To Main Menu");
+		returnToMenuBtn.setPrefWidth(BTN_WIDTH);
+		returnToMenuBtn.setPrefHeight(BTN_HEIGHT);
+
+		returnToMenuBtn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+				" -fx-base: " + BTN_COLOR + ";" + 
+				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
+
+		returnToMenuBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				_window.SetWindowScene(new Scene(new MainScreen(_window), _window.GetWidth(), _window.GetHeight()));
+			}
+		});
+
 		// Set root node size
 		root.setPrefWidth(_window.GetWidth());
 
 		_btnLevels = new ArrayList<Button>();
+
+		_btnLevels.add(returnToMenuBtn);
+
 
 		Text txtSelection = new Text(TXT_SELECT_LEVEL);
 		txtSelection.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
@@ -181,30 +210,65 @@ public class LevelSelectionScreen extends Parent {
 			btn.setPrefWidth(BTN_WIDTH);
 
 			btn.setPrefHeight(BTN_HEIGHT);
-			if(level.isUnlocked()) {
-				btn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
-						" -fx-base: " + BTN_COLOR + ";" + 
-						" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 
-				btn.setOnAction(new EventHandler<ActionEvent>() {
-					@Override
-					public void handle(ActionEvent arg0) {
-						_window.SetWindowScene(new Scene(new QuizScreen(_window, listName), _window.GetWidth(), _window.GetHeight()));
-					}
-				});
-			} else {
-				btn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
-						" -fx-base: " + BTN_LOCKED_COLOR + ";" + 
-						" -fx-text-fill: " + BTN_FONT_COLOR + ";");
+			if(_quizType == QuizType.NORMAL_QUIZ) {
+				if(level.isUnlocked()) {
+					btn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+							" -fx-base: " + BTN_COLOR + ";" + 
+							" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 
-				btn.setOnAction(new EventHandler<ActionEvent>() {
-					@Override
-					public void handle(ActionEvent arg0) {
-						PopupWindow.DeployPopupWindow("You need to unlock this level before you can use play it!");
+					btn.setOnAction(new EventHandler<ActionEvent>() {
+						@Override
+						public void handle(ActionEvent arg0) {
+							_window.SetWindowScene(new Scene(new QuizScreen(_window, listName, _quizType), _window.GetWidth(), _window.GetHeight()));
+						}
+					});
+				} else {
+					btn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+							" -fx-base: " + BTN_LOCKED_COLOR + ";" + 
+							" -fx-text-fill: " + BTN_FONT_COLOR + ";");
+
+					btn.setOnAction(new EventHandler<ActionEvent>() {
+						@Override
+						public void handle(ActionEvent arg0) {
+							PopupWindow.DeployPopupWindow("You need to unlock this level before you can use play it!");
+						}
+					});
+				}
+			} else if(_quizType == QuizType.REVIEW_QUIZ) {
+				if(level.isUnlocked()) {
+					btn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+							" -fx-base: " + BTN_COLOR + ";" + 
+							" -fx-text-fill: " + BTN_FONT_COLOR + ";");
+
+					if(WordList.GetWordList().GetRandomFailedWords(listName, 10).size() == 0) {
+						btn.setOnAction(new EventHandler<ActionEvent>() {
+							@Override
+							public void handle(ActionEvent arg0) {
+								PopupWindow.DeployPopupWindow("You currently have no words to review!");
+							}
+						});
+					} else {
+						btn.setOnAction(new EventHandler<ActionEvent>() {
+							@Override
+							public void handle(ActionEvent arg0) {
+								_window.SetWindowScene(new Scene(new QuizScreen(_window, listName, _quizType), _window.GetWidth(), _window.GetHeight()));
+							}
+						});
 					}
-				});
+				} else {
+					btn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+							" -fx-base: " + BTN_LOCKED_COLOR + ";" + 
+							" -fx-text-fill: " + BTN_FONT_COLOR + ";");
+
+					btn.setOnAction(new EventHandler<ActionEvent>() {
+						@Override
+						public void handle(ActionEvent arg0) {
+							PopupWindow.DeployPopupWindow("You need to unlock this level before you can use play it!");
+						}
+					});
+				}
 			}
-
 			_btnLevels.add(btn);
 		}
 

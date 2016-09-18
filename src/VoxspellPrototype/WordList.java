@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.List;
 
 public class WordList extends ArrayList<Level> {
 
@@ -95,6 +94,16 @@ public class WordList extends ArrayList<Level> {
 				}
 			}
 
+			for(int i = 0; i < this.size(); i++) {
+				//Getting a level from the hash map
+				Level level = this.get(i);
+				List<String> failedWords = level.getFailedWords();
+				for(int j = 0; j < failedWords.size(); j++) {
+					textFileWriter.append("failed " + level.levelName() + " " + failedWords.get(j) + "\n");
+				}
+			}
+			
+
 			textFileWriter.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -123,6 +132,19 @@ public class WordList extends ArrayList<Level> {
 								level.unlockLevel();
 							}
 						}
+					} else if(line.contains("failed")) {
+						line = line.replaceAll("failed ", "");
+						String[] splitLine = line.split("\\s+");
+						String levelName = "";
+						for(int i = 0; i < splitLine.length - 1; i++) {
+							if(i != splitLine.length - 2) {
+								levelName += splitLine[i] + " ";
+							} else {
+								levelName += splitLine[i];	
+							}
+						}
+						Level level = wordlist.getLevelFromName(levelName);
+						level.addToFailed(splitLine[splitLine.length - 1]);
 					} else {
 						//Splitting each line by spaces
 						String[] wordAndStats = line.split("\\s+"); 
@@ -250,6 +272,30 @@ public class WordList extends ArrayList<Level> {
 		return wordlist.subList(0, listCount);
 	}
 
+	public List<String> GetRandomFailedWords(String wordlistName, int listCount) {
+		List<String> wordlist = null;
+
+		// Get list of words from named wordlist
+		Level level = getLevelFromName(wordlistName);
+
+		Collection<String> wordset = level.getFailedWords();
+		wordlist = new ArrayList<String>(wordset);
+
+		// Shuffle list
+		java.util.Collections.shuffle(wordlist);
+
+		// Ensure we don't try to return more elements than exist in the list
+		listCount = Math.min(listCount, wordlist.size() - 1);
+
+		// Return first n elements from shuffled list (essentially n random elements)
+		if(listCount < 0) {
+			return wordlist.subList(0, 0);
+		} else {
+			return wordlist.subList(0, listCount);
+		}
+		
+	}
+
 	public void failedWord(String word, String wordlistName) {
 
 		Level level = getLevelFromName(wordlistName);
@@ -322,5 +368,15 @@ public class WordList extends ArrayList<Level> {
 			}
 		}
 		return level;
+	}
+
+	public void addToLevelsFailedList(String word, String levelName) {
+		Level level = getLevelFromName(levelName);
+		level.addToFailed(word);
+	}
+
+	public void removeFromLevelFailedList(String word, String levelName) {
+		Level level = getLevelFromName(levelName);
+		level.removeFromFailed(word);
 	}
 }
