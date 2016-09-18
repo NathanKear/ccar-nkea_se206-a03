@@ -10,10 +10,12 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.BorderPane;
 import javafx.util.Callback;
 
 public class StatisticsScreen extends Parent {
@@ -33,9 +35,13 @@ public class StatisticsScreen extends Parent {
 		//This will be the name of each tab
 		String tabName;
 
+		BorderPane bp = new BorderPane();
+				
 		//Creating the pane to store the tabs
 		TabPane statsTabPane = new TabPane();
 
+		bp.setCenter(statsTabPane);
+		
 		int tabWidth = _window.GetWidth()/(numOfTabs + 3);
 		statsTabPane.setTabMinWidth(tabWidth);
 		
@@ -54,8 +60,17 @@ public class StatisticsScreen extends Parent {
 		statsTabPane.setMinHeight(_window.GetHeight());
 		statsTabPane.setMinWidth(_window.GetWidth());
 		
+		Button backButton = new Button("Press here to go back to the main menu");
+
+		backButton.setMinWidth(_window.GetWidth());
+		
+		bp.setMinHeight(_window.GetHeight());
+		bp.setMinWidth(_window.GetWidth());
+		
+		bp.setBottom(backButton);
+		
 		//Adding the statspane
-		this.getChildren().add(statsTabPane);
+		this.getChildren().add(bp);
 
 		return;
 

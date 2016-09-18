@@ -22,7 +22,7 @@ import javafx.scene.text.TextAlignment;
 public class QuizScreen extends Parent {
 
 	private Window _window;
-	
+
 	private final String BTN_SPEAK_TEXT = "Speak";
 	private final String BTN_ENTER_TEXT = "Enter";
 	private final int HBX_SPACING = 10;
@@ -40,31 +40,35 @@ public class QuizScreen extends Parent {
 	private final int BTN_WIDTH = 200;
 	private final int BTN_HEIGHT = 70;
 	private final int TFD_WIDTH = 300;
-	
+
 	private final Text _txtQuiz;
 	private final Text _txtProgress;
 	private TextField _tfdAttempt;
 	private String _level;
-	
+
 	private List<String> _words;
 	private int _wordIndex = 0;
 	private boolean _firstGuess = true;
-	
-	public QuizScreen(Window window, String wordlistName) {
+
+	public QuizScreen(Window window, String wordlistName, LevelSelectionScreen.QuizType quizType) {
 		this._window = window;
-		
+
 		_level = wordlistName;
-		
+
 		// Get words for this quiz
-		_words = WordList.GetWordList().GetRandomWords(wordlistName, VoxspellPrototype.QUIZ_LENGTH);
-		
+		if(quizType == LevelSelectionScreen.QuizType.NORMAL_QUIZ) {
+			_words = WordList.GetWordList().GetRandomWords(wordlistName, VoxspellPrototype.QUIZ_LENGTH);
+		} else {
+			_words = WordList.GetWordList().GetRandomFailedWords(wordlistName, VoxspellPrototype.QUIZ_LENGTH);
+		}
+
 		// Create root pane and set its size to whole window
 		VBox root = new VBox(VBX_SPACING);
 		root.setPrefWidth(_window.GetWidth());
 		root.setPrefHeight(_window.GetHeight());
 		root.setPadding(new Insets(TOP_BOTTOM_PADDING, SIDE_PADDING, TOP_BOTTOM_PADDING, SIDE_PADDING));
-		
-		
+
+
 		// Create quiz title text
 		_txtQuiz = new Text("Quiz\n\n");
 		_txtQuiz.prefWidth(_window.GetWidth());
@@ -72,7 +76,7 @@ public class QuizScreen extends Parent {
 		_txtQuiz.setWrappingWidth(_window.GetWidth());
 		_txtQuiz.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
-		
+
 		// Create score progress counter text
 		_txtProgress = new Text("\n0/" + _words.size());
 		_txtProgress.prefWidth(_window.GetWidth());
@@ -80,31 +84,31 @@ public class QuizScreen extends Parent {
 		_txtProgress.setWrappingWidth(_window.GetWidth() - (SIDE_PADDING * 2));
 		_txtProgress.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
-		
+
 		// Add all nodes to root pane
 		root.getChildren().addAll(_txtQuiz, buildCenterPane(BTN_HEIGHT), _txtProgress);
-		
+
 		// Add root pane to parent
 		this.getChildren().addAll(root);
-		
+
 		// Color background
 		root.setStyle("-fx-background-color: " + BACK_COLOR + ";");
-		
+
 		new FestivalSpeakTask("Spell " + currentWord()).run();
 	}
-	
+
 	private Pane buildCenterPane(double desiredHeight) {
 		// Build center pane
 		HBox centerPane = new HBox(HBX_SPACING);
-		
+
 		// Create center pane nodes
 		Button btnSpeak = new Button(BTN_SPEAK_TEXT);
 		Button btnEnter = new Button(BTN_ENTER_TEXT);
 		_tfdAttempt = new TextField();
-		
+
 		// Add nodes to center pane
 		centerPane.getChildren().addAll(btnSpeak, _tfdAttempt, btnEnter);
-		
+
 		// Set node styles
 		btnSpeak.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
@@ -114,10 +118,10 @@ public class QuizScreen extends Parent {
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 		_tfdAttempt.setStyle("-fx-font: " + TFD_FONT_SIZE + " arial;" +
 				"-fx-text-fill: " + TFD_FONT_COLOR + ";");
-		
+
 		// Center text in text-field
 		_tfdAttempt.setAlignment(Pos.CENTER);
-		
+
 		// Set node dimensions
 		btnEnter.setPrefWidth(BTN_WIDTH);
 		btnEnter.setPrefHeight(BTN_HEIGHT);
@@ -125,9 +129,9 @@ public class QuizScreen extends Parent {
 		btnSpeak.setPrefHeight(BTN_HEIGHT);
 		_tfdAttempt.setPrefWidth(TFD_WIDTH);
 		_tfdAttempt.setPrefHeight(BTN_HEIGHT);
-		
+
 		centerPane.setAlignment(Pos.CENTER);
-		
+
 		// Set action for speak button
 		btnSpeak.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -135,14 +139,14 @@ public class QuizScreen extends Parent {
 				new FestivalSpeakTask(currentWord()).run();
 			}
 		});
-		
+
 		btnEnter.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {				
 				attemptWord(_tfdAttempt.getText());
 			}
 		});
-		
+
 		_tfdAttempt.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent e) {
@@ -151,48 +155,48 @@ public class QuizScreen extends Parent {
 				}
 			}	
 		});
-		
+
 		return centerPane;
 	}
-	
+
 	/**
 	 * Test entered word for correctness and update the GUI
 	 * @param word
 	 * @return whether word is correct or not
 	 */
 	private boolean attemptWord(String word) {
-		
+
 		_txtQuiz.setText("Quiz\n\n");
-		
+
 		word = word.trim();
-		
+
 		if (word.equals("")) {
 			// Word attempt must contain some characters		
 			_txtQuiz.setText("Quiz\n\nEnter a word"); 
-			
-			return false;
-		}
-		
-		if (word.contains(" ")) {
-			// Word attempt may not contain white space
-			_txtQuiz.setText("Quiz\n\nMay not contain spaces"); 
-			
-			return false;
-		}
-		
-		if (!word.matches("[a-zA-Z]+")) {
-			// Word attempt may only contain alphabet characters.
-			
-			_txtQuiz.setText("Quiz\n\nMay only contain letters"); 
-			
+
 			return false;
 		}
 
-		
+		if (word.contains(" ")) {
+			// Word attempt may not contain white space
+			_txtQuiz.setText("Quiz\n\nMay not contain spaces"); 
+
+			return false;
+		}
+
+		if (!word.matches("[a-zA-Z]+")) {
+			// Word attempt may only contain alphabet characters.
+
+			_txtQuiz.setText("Quiz\n\nMay only contain letters"); 
+
+			return false;
+		}
+
+
 		boolean correct = (word.toLowerCase().equals(currentWord().toLowerCase()));
 		boolean advance = false;
 		String speechOutput = "";
-		
+
 		if (_firstGuess) {
 			if (correct) {
 				// Correct on first guess
@@ -217,17 +221,17 @@ public class QuizScreen extends Parent {
 				advance = true;
 			}
 		}
-		
+
 		if (advance && nextWord()) {
 			speechOutput = speechOutput + " Spell " + currentWord();
 		}
-		
+
 		new FestivalSpeakTask(speechOutput).run();
 		_tfdAttempt.clear();
-		
+
 		return correct;
 	}
-	
+
 	/**
 	 * Move on to next word
 	 * @return true if a next word is available.
@@ -238,16 +242,16 @@ public class QuizScreen extends Parent {
 			_wordIndex++;
 			_firstGuess = true;
 			_txtProgress.setText("\n" + _wordIndex + "/" + _words.size());
-			
+
 			return true;
 		} else {
 			// No words left to spell
 			_window.SetWindowScene(new Scene(new MainScreen(_window), _window.GetWidth(), _window.GetHeight()));
-			
+
 			return false;
 		}
 	}
-	
+
 	private String currentWord() {
 		return _words.get(_wordIndex);
 	}
