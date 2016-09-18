@@ -162,7 +162,7 @@ public class MainScreen extends Parent {
 		btnClear.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				_window.SetWindowScene(new Scene(new MediaScreen(_window), _window.GetWidth(), _window.GetHeight()));
+				WordList.GetWordList().ClearStats();
 			}	
 		});
 		

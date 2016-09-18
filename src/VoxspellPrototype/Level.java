@@ -43,4 +43,11 @@ public class Level {
 		return _currentlyFailedList;
 	}
 	
+	public void ClearStats() {
+		for (int[] stats : _levelMap.values()) {
+			for (int i = 0; i < stats.length; i++) {
+				stats[i] = 0;
+			}
+		}
+	}
 }

@@ -42,6 +42,12 @@ public class WordList extends ArrayList<Level> {
 
 		_instance = initialiseNathansAwesomeDataStructure("NZCER-spelling-lists.txt");
 	}
+	
+	public void ClearStats() {
+		for (Level level : this) {
+			level.ClearStats();
+		}
+	}
 
 	public void saveWordListToDisk() {
 		File f = new File("Word-Log");
