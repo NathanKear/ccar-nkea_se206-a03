@@ -9,16 +9,30 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
 public class StatisticsScreen extends Parent {
 	
 	private Window _window;
+	
+	private final String BTN_RETURN_TEXT = "Return";
+	private final String BTN_COLOR = VoxspellPrototype.DARK_BLUE;
+	private final String BTN_FONT_COLOR = VoxspellPrototype.WHITE;
+	private final int BTN_FONT_SIZE = VoxspellPrototype.BTN_FONT_SIZE;
+	private final double BTNWIDTH_SCREENWIDTH_RATIO = 1.00;
+	private final int BTN_HEIGHT = 70;
+	private final String BACK_COLOR = VoxspellPrototype.LIGHT_BLUE;
 	
 	public StatisticsScreen(Window window) {
 		
@@ -54,11 +68,29 @@ public class StatisticsScreen extends Parent {
 		statsTabPane.setMinHeight(_window.GetHeight());
 		statsTabPane.setMinWidth(_window.GetWidth());
 		
+		Button btnReturn;
+		btnReturn = new Button(BTN_RETURN_TEXT);
+		btnReturn.setPrefWidth(BTNWIDTH_SCREENWIDTH_RATIO * _window.GetWidth());
+		btnReturn.setPrefHeight(BTN_HEIGHT);
+		btnReturn.setAlignment(Pos.CENTER);
+		btnReturn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+				" -fx-base: " + BTN_COLOR + ";" + 
+				" -fx-text-fill: " + BTN_FONT_COLOR + ";");	
+		btnReturn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				_window.SetWindowScene(new Scene(new MainScreen(_window), _window.GetWidth(), _window.GetHeight()));
+			}
+		});
+		
+		VBox root = new VBox(btnReturn, statsTabPane);
+		
 		//Adding the statspane
-		this.getChildren().add(statsTabPane);
+		this.getChildren().add(root);
+		
+		root.setStyle("-fx-background-color: " + BACK_COLOR + ";");
 
 		return;
-
 	}
 
 	private void populateStatsTable(Level level, Tab tab, int index) {
