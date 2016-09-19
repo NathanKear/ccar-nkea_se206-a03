@@ -10,6 +10,8 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class ResultsScreen extends Parent {
 	
@@ -29,7 +31,7 @@ public class ResultsScreen extends Parent {
 	private final double BTNWIDTH_SCREENWIDTH_RATIO = 0.666;
 	private final int BTN_HEIGHT = 70;
 	
-	public ResultsScreen(Window window, int correctWords, int wordListLength) {
+	public ResultsScreen(Window window, int correctWords, int wordListLength, String listName) {
 		this._window = window;
 		
 		// Create root pane and set its size to whole window
@@ -55,9 +57,7 @@ public class ResultsScreen extends Parent {
 		btnReward.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
-		if (correctWords < wordListLength - 1) {
-			btnReward.setDisable(true);
-		}
+		
 		btnReward.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -87,5 +87,20 @@ public class ResultsScreen extends Parent {
 		this.getChildren().addAll(root);
 		
 		root.setStyle("-fx-background-color: " + BACK_COLOR + ";");
+		
+		if (correctWords < VoxspellPrototype.QUIZ_LENGTH - 1) {
+			// Dont unlock reward or next level
+			btnReward.setDisable(true);	
+		} else {
+			// Unlock reward and next level
+			if (listName == WordList.GetWordList().HighestUnlockedLevel().levelName()) {
+				String level = "";
+				if ((level = WordList.GetWordList().UnlockNextLevel()) != null) {
+					if (level != null && !level.equals(""))
+					PopupWindow.DeployPopupWindow(level + " unlocked!").setAlwaysOnTop(true);
+				}
+			}
+		}	
+		
 	}
 }

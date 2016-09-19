@@ -48,6 +48,34 @@ public class WordList extends ArrayList<Level> {
 		}
 	}
 
+	/**
+	 * Unlock the lowest currently locked level.
+	 * @return return the name of the unlocked level, otherwise null.
+	 */
+	public String UnlockNextLevel() {
+		for (Level level : this) {
+			if (!level.isUnlocked()) {
+				level.unlockLevel();
+				return level.levelName();
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Return highest level unlocked.
+	 * @return Highest level unlocked. Null if none unlocked.
+	 */
+	public Level HighestUnlockedLevel() {
+		for (int i = this.size() - 1; i >= 0; i--) {
+			if (this.get(i).isUnlocked())
+				return this.get(i);
+		}
+		
+		return null;
+	}
+
 	public void saveWordListToDisk() {
 		File f = new File("Word-Log");
 
@@ -311,6 +339,7 @@ public class WordList extends ArrayList<Level> {
 
 		//Adding the word to the failed list in the level
 		level.addToFailed(word);
+		level.removeFromMastered(word);
 
 		//Putting the word back in the table with the updated stats
 		levelMap.put(word, stats);
@@ -332,6 +361,7 @@ public class WordList extends ArrayList<Level> {
 
 		//Removing the word from the failed list if it is there
 		level.removeFromFailed(word);
+		level.removeFromMastered(word);
 
 		//Putting the word back in the table with the updated stats
 		levelMap.put(word, stats);
@@ -353,13 +383,14 @@ public class WordList extends ArrayList<Level> {
 
 		//Removing the word from the failed list if it is there
 		level.removeFromFailed(word);
+		level.addToMastered(word);
 
 		//Putting the word back in the table with the updated stats
 		levelMap.put(word, stats);
 
 	}
 
-	private Level getLevelFromName(String name) {
+	public Level getLevelFromName(String name) {
 		Level level = null;
 		for(int i = 0; i < this.size(); i++) {
 			String levelName;
