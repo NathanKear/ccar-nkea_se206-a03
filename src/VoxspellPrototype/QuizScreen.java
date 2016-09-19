@@ -249,7 +249,7 @@ public class QuizScreen extends Parent {
 			return true;
 		} else {
 			// No words left to spell
-			_window.SetWindowScene(new Scene(new ResultsScreen(_window, _masteredWords, _words.size()), _window.GetWidth(), _window.GetHeight()));
+			_window.SetWindowScene(new Scene(new ResultsScreen(_window, _masteredWords, _words.size(), _level), _window.GetWidth(), _window.GetHeight()));
 			
 
 			return false;

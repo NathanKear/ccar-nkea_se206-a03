@@ -206,9 +206,20 @@ public class LevelSelectionScreen extends Parent {
 			Level level = wordlist.get(i);
 			final String listName = level.levelName();
 
-			final Button btn = new Button(listName);
+			final Button btn = new Button();
+			
+			switch (_quizType) {
+			case NORMAL_QUIZ:
+				btn.setText(listName + " " + WordList.GetWordList().getLevelFromName(listName).getMasteredWords().size() + "/" + WordList.GetWordList().getLevelFromName(listName).Size());
+				break;
+			case REVIEW_QUIZ:
+				btn.setText(listName + " (" + WordList.GetWordList().getLevelFromName(listName).getFailedWords().size() + ")");
+				break;
+			default:
+				break;
+			}
+			
 			btn.setPrefWidth(BTN_WIDTH);
-
 			btn.setPrefHeight(BTN_HEIGHT);
 
 			if(_quizType == QuizType.NORMAL_QUIZ) {
