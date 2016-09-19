@@ -98,8 +98,9 @@ public class OptionsScreen extends Parent {
 		voiceSpeedBox.getChildren().addAll(voiceSpeedLabel, voiceSpeedComboBox);
 
 		ObservableList<String> voiceTypeOptions = FXCollections.observableArrayList(
-				"Normal Voice",
-				"New Zealand Voice"
+				"Male Voice 1",
+				"Male Voice 2",
+				"New Zealand Male Voice"
 				);
 
 		final ComboBox<String> voiceTypeComboBox = new ComboBox<String>(voiceTypeOptions);
@@ -120,7 +121,15 @@ public class OptionsScreen extends Parent {
 			@Override
 			public void changed(ObservableValue<? extends String> arg0,
 					String oldValue, String newValue) {
-				//Add code here to call appropriate script 
+					String voice = "";
+				if(newValue.equals("Male Voice 1")) {
+					voice = "kal_diphone";
+				} else if (newValue.equals("Male Voice 2")) {
+					voice = "rab_diphone";
+				} else if (newValue.equals("New Zealand Male Voice")) {
+					voice = "akl_nz_jdt_diphone";
+				}
+				FestivalSpeakTask.changeVoice(voice);
 			}
 
 		});
@@ -130,7 +139,6 @@ public class OptionsScreen extends Parent {
 			@Override
 			public void changed(ObservableValue<? extends String> arg0,
 					String oldValue, String newValue) {
-				//Add code here to call appropriate script 
 			}
 
 		});

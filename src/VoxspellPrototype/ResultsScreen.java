@@ -97,7 +97,7 @@ public class ResultsScreen extends Parent {
 				String level = "";
 				if ((level = WordList.GetWordList().UnlockNextLevel()) != null) {
 					if (level != null && !level.equals(""))
-					PopupWindow.DeployPopupWindow(level + " unlocked!").setAlwaysOnTop(true);
+					PopupWindow.DeployPopupWindow(level + " unlocked!");
 				}
 			}
 		}	
