@@ -57,7 +57,7 @@ public class OptionsScreen extends Parent {
 		
 		Button returnToMenuBtn = new Button("Return To Main Menu");
 		
-		returnToMenuBtn.setPrefWidth(_window.GetWidth());
+		returnToMenuBtn.setPrefWidth(_window.GetWidth() - (OPTIONS_PADDING * 2));
 		returnToMenuBtn.setPrefHeight(_window.GetHeight()/8);
 
 		returnToMenuBtn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
@@ -80,8 +80,9 @@ public class OptionsScreen extends Parent {
 		root.setPrefWidth(_window.GetWidth());
 		
 		ObservableList<String> voiceSpeedOptions = FXCollections.observableArrayList(
-				"Voice Speed 1",
-				"Voice Speed 2"
+				"Normal",
+				"Slow",
+				"Very Slow"
 				);
 
 		final ComboBox<String> voiceSpeedComboBox = new ComboBox<String>(voiceSpeedOptions);
@@ -130,7 +131,16 @@ public class OptionsScreen extends Parent {
 			@Override
 			public void changed(ObservableValue<? extends String> arg0,
 					String oldValue, String newValue) {
-				//Add code here to call appropriate script 
+				if (newValue == "Normal") {
+					FestivalSpeakTask.SetSpeed(1.0);
+					new FestivalSpeakTask("Normal speed").run();
+				} else if (newValue == "Slow") {
+					FestivalSpeakTask.SetSpeed(1.5);
+					new FestivalSpeakTask("Slow speed").run();
+				} else {
+					FestivalSpeakTask.SetSpeed(2.0);
+					new FestivalSpeakTask("Very slow speed").run();
+				}
 			}
 
 		});

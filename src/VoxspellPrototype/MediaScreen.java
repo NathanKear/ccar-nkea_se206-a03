@@ -122,10 +122,10 @@ public class MediaScreen extends Parent {
 			public void actionPerformed(ActionEvent arg0) {
 				if (_mediaPlayer.isMute()) {
 					_mediaPlayer.mute(false);
-					btnMute.setText("Unmute");
+					btnMute.setText("Mute");
 				} else {
 					_mediaPlayer.mute(true);
-					btnMute.setText("Mute");
+					btnMute.setText("Unmute");
 				}
 			}	
     	});

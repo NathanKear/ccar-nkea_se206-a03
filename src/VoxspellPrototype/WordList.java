@@ -267,11 +267,9 @@ public class WordList extends ArrayList<Level> {
 			nathansAwesomeDataStructure.add(level);
 			textFileReader.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		//		nathansAwesomeDataStructure = loadStatsFromFile(nathansAwesomeDataStructure);
 		return nathansAwesomeDataStructure;
 	}
 
@@ -313,15 +311,10 @@ public class WordList extends ArrayList<Level> {
 		java.util.Collections.shuffle(wordlist);
 
 		// Ensure we don't try to return more elements than exist in the list
-		listCount = Math.min(listCount, wordlist.size() - 1);
+		listCount = Math.min(listCount, wordlist.size());
 
 		// Return first n elements from shuffled list (essentially n random elements)
-		if(listCount < 0) {
-			return wordlist.subList(0, 0);
-		} else {
-			return wordlist.subList(0, listCount);
-		}
-		
+		return wordlist.subList(0, listCount);
 	}
 
 	public void failedWord(String word, String wordlistName) {

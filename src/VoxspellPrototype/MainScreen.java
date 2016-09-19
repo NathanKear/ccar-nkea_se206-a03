@@ -140,7 +140,7 @@ public class MainScreen extends Parent {
 		btnOptions.setPrefHeight(Integer.MAX_VALUE);
 		
 		// Add buttons to pane
-		menuButtons.getChildren().addAll(btnNew, btnReview, btnStats, btnClear, btnQuit, btnOptions);
+		menuButtons.getChildren().addAll(btnNew, btnReview, btnStats, btnClear, btnOptions, btnQuit);
 		
 		// Add padding around vbox (so buttons don't touch screen edge)
 		menuButtons.setPadding(new Insets(MENU_BAR_PADDING));

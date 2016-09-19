@@ -17,17 +17,13 @@ class FestivalSpeakTask extends Task<Void> {
 		this._word = word;
 	}
 	
-	public FestivalSpeakTask(String word) {
-		this._word = word;
-	}
-
 	@Override
 	protected Void call() throws Exception {
 
 		String setSpeed = "(Parameter.set 'Duration_Stretch " + _speed + ")";
 		String sayPhrase = "(SayText \"" + this._word + "\")";
 		
-		new ProcessBuilder("/usr/bin/festival", setSpeed, sayPhrase).start();
+		new ProcessBuilder("/usr/bin/festival", setSpeed, sayPhrase, "(exit)").start();
 		
 		return null;
 	}
