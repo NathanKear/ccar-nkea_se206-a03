@@ -34,6 +34,7 @@ public class MainScreen extends Parent {
 	private final String BTN_STATS_TEXT = "View Stats";
 	private final String BTN_CLEAR_TEXT = "Clear Stats";
 	private final String BTN_QUIT_TEXT = "Quit";
+	private final String BTN_OPTIONS_TEXT = "Options";
 	private final String BTN_COLOR = VoxspellPrototype.DARK_BLUE;
 	private final String BACK_COLOR = VoxspellPrototype.LIGHT_BLUE;
 	private final String BTN_FONT_COLOR = VoxspellPrototype.WHITE;
@@ -84,7 +85,7 @@ public class MainScreen extends Parent {
 	}
 	
 	private Pane buildMenuBar(double desiredWidth) {
-		Button btnNew, btnReview, btnStats, btnClear, btnQuit;
+		Button btnNew, btnReview, btnStats, btnClear, btnQuit, btnOptions;
 
 		// Create vbox with specific dimensions
 		VBox menuButtons = new VBox(BUTTON_SEPERATION);
@@ -97,6 +98,7 @@ public class MainScreen extends Parent {
 		btnStats = new Button(BTN_STATS_TEXT);
 		btnClear = new Button(BTN_CLEAR_TEXT);
 		btnQuit = new Button(BTN_QUIT_TEXT);
+		btnOptions = new Button(BTN_OPTIONS_TEXT);
 		
 		// Set button style properties
 		btnNew.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
@@ -112,6 +114,9 @@ public class MainScreen extends Parent {
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 		btnQuit.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+				" -fx-base: " + BTN_COLOR + ";" + 
+				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
+		btnOptions.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 		
@@ -131,8 +136,11 @@ public class MainScreen extends Parent {
 		btnQuit.setMinWidth(menuButtons.getPrefWidth()); 
 		btnQuit.setPrefHeight(Integer.MAX_VALUE);
 		
+		btnOptions.setMinWidth(menuButtons.getPrefWidth()); 
+		btnOptions.setPrefHeight(Integer.MAX_VALUE);
+		
 		// Add buttons to pane
-		menuButtons.getChildren().addAll(btnNew, btnReview, btnStats, btnClear, btnQuit);
+		menuButtons.getChildren().addAll(btnNew, btnReview, btnStats, btnClear, btnQuit, btnOptions);
 		
 		// Add padding around vbox (so buttons don't touch screen edge)
 		menuButtons.setPadding(new Insets(MENU_BAR_PADDING));
@@ -172,6 +180,13 @@ public class MainScreen extends Parent {
 				WordList wordList = WordList.GetWordList();
 				wordList.saveWordListToDisk();
 				Platform.exit();
+			}	
+		});
+		
+		btnOptions.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				_window.SetWindowScene(new Scene(new OptionsScreen(_window), _window.GetWidth(), _window.GetHeight()));
 			}	
 		});
 		
