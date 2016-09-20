@@ -79,7 +79,9 @@ public class LevelSelectionScreen extends Parent {
 		//If the user is opening the application for the first time...
 		File wordlog = new File("Word-Log");
 
-		if(!wordlog.exists()) {
+		if(WordList.GetWordList().size() > 0 && WordList.GetWordList().get(0).isUnlocked()) {
+			GenerateLevelSelectionScreen();
+		} else if(!wordlog.exists()) {
 			ChooseLevelScreen();
 		}
 
@@ -117,11 +119,11 @@ public class LevelSelectionScreen extends Parent {
 		// Set root node size
 		root.setPrefWidth(_window.GetWidth());
 
-		Label levelSelectLabel = new Label("Please select which level you wish to start at. All levels below "
+		Text levelSelectLabel = new Text("Please select which level you wish to start at. All levels below "
 				+ "the level you choose, and the level itself, will be unlocked!");
 		levelSelectLabel.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
-		levelSelectLabel.setWrapText(true);
+		levelSelectLabel.setWrappingWidth(_window.GetWidth());
 		root.setStyle("-fx-background-color: " + BACK_COLOR);
 
 		root.setPadding(new Insets(SELECTION_BAR_PADDING));
@@ -134,7 +136,9 @@ public class LevelSelectionScreen extends Parent {
 		this.getChildren().add(root);
 
 		levelSelect.setPromptText("Select a level");
-		levelSelect.setStyle("-fx-base: " + BTN_COLOR + "; -fx-fill: " + TXT_FONT_COLOR);
+		levelSelect.setStyle("-fx-base: " + BTN_COLOR + "; -fx-font: " + BTN_FONT_SIZE + " arial; -fx-text-fill: " + TXT_FONT_COLOR + ";");
+		levelSelect.setPrefWidth(_window.GetWidth() - (SELECTION_BAR_PADDING * 2));
+		levelSelect.setPrefHeight(60);
 		levelSelect.autosize();
 
 		levelSelect.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {

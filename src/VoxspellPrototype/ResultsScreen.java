@@ -10,8 +10,6 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 public class ResultsScreen extends Parent {
 	
@@ -58,10 +56,12 @@ public class ResultsScreen extends Parent {
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 		
+		final boolean specialReward = correctWords == wordListLength;
+		
 		btnReward.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				_window.SetWindowScene(new Scene(new MediaScreen(_window), _window.GetWidth(), _window.GetHeight()));
+				_window.SetWindowScene(new Scene(new MediaScreen(_window, specialReward), _window.GetWidth(), _window.GetHeight()));
 			}
 		});
 		
@@ -97,7 +97,7 @@ public class ResultsScreen extends Parent {
 				String level = "";
 				if ((level = WordList.GetWordList().UnlockNextLevel()) != null) {
 					if (level != null && !level.equals(""))
-					PopupWindow.DeployPopupWindow(level + " unlocked!").setAlwaysOnTop(true);
+					PopupWindow.DeployPopupWindow(level + " unlocked!");
 				}
 			}
 		}	

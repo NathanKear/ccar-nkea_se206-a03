@@ -31,10 +31,12 @@ public class MediaScreen extends Parent {
 	private EmbeddedMediaPlayerComponent _mediaPlayerComponent;
 	private EmbeddedMediaPlayer _mediaPlayer;
 	private String _currentMedia;
+	private boolean _specialReward;
 	
-	public MediaScreen(Window window) {	
+	public MediaScreen(Window window, boolean specialReward) {	
 		
 		this._window = window;
+		this._specialReward = specialReward;
 		_window.Show(false);
 		
 		testVLCJPresence();
@@ -87,6 +89,8 @@ public class MediaScreen extends Parent {
     	btnForward.setFont(new Font("Arial", Font.PLAIN, VoxspellPrototype.BTN_FONT_SIZE));
     	btnBack.setFont(new Font("Arial", Font.PLAIN, VoxspellPrototype.BTN_FONT_SIZE));
     	btnSpookify.setFont(new Font("Arial", Font.PLAIN, VoxspellPrototype.BTN_FONT_SIZE));
+    	
+    	btnSpookify.setEnabled(_specialReward);
         
     	btnPause.addActionListener(new ActionListener() {
 			@Override

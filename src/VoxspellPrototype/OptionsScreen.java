@@ -29,6 +29,11 @@ public class OptionsScreen extends Parent {
 	private final String TXT_FONT_COLOR = VoxspellPrototype.WHITE;
 	private final int OPTIONS_PADDING = 10;
 	private final String BTN_FONT_COLOR = VoxspellPrototype.WHITE;
+	private final Insets TXT_INSETS = new Insets(10, 10, 10, 30);
+	private final int HBX_SPACING = 30;
+	private final int TXT_WIDTH = 300;
+	private final int CMB_WIDTH = 400;
+	private final int CMB_HEIGHT = 40;
 
 	public OptionsScreen(Window window) {
 		super();
@@ -40,11 +45,11 @@ public class OptionsScreen extends Parent {
 		
 		this.getChildren().add(root);
 
-		HBox voiceSpeedBox = new HBox(30);
-		voiceSpeedBox.setAlignment(Pos.CENTER);
+		HBox voiceSpeedBox = new HBox(HBX_SPACING);
+		voiceSpeedBox.setPadding(TXT_INSETS);
 
-		HBox voiceTypeBox = new HBox(40);
-		voiceTypeBox.setAlignment(Pos.CENTER);
+		HBox voiceTypeBox = new HBox(HBX_SPACING);
+		voiceTypeBox.setPadding(TXT_INSETS);
 		
 		Text optionsLabel = new Text("Options");
 
@@ -59,7 +64,6 @@ public class OptionsScreen extends Parent {
 		
 		returnToMenuBtn.setPrefWidth(_window.GetWidth() - (OPTIONS_PADDING * 2));
 		returnToMenuBtn.setPrefHeight(_window.GetHeight()/8);
-
 		returnToMenuBtn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
@@ -86,33 +90,37 @@ public class OptionsScreen extends Parent {
 				);
 
 		final ComboBox<String> voiceSpeedComboBox = new ComboBox<String>(voiceSpeedOptions);
-		voiceSpeedComboBox.setStyle("-fx-base: " + BTN_COLOR + "; -fx-text-fill: " + TXT_FONT_COLOR);
-		voiceSpeedComboBox.setTranslateY(5);
-		
+		voiceSpeedComboBox.setStyle("-fx-base: " + BTN_COLOR + "; -fx-font: " + BTN_FONT_SIZE + " arial; -fx-text-fill: " + TXT_FONT_COLOR + ";");
+		voiceSpeedComboBox.setPrefHeight(CMB_HEIGHT);
+		voiceSpeedComboBox.setPrefWidth(CMB_WIDTH);
 		voiceSpeedComboBox.setPromptText("Choose a voice speed");
 
 		Label voiceSpeedLabel = new Label("Select voice speed");
 		voiceSpeedLabel.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + TXT_FONT_COLOR + ";");
+		voiceSpeedLabel.setPrefWidth(TXT_WIDTH);
 
 		voiceSpeedBox.getChildren().addAll(voiceSpeedLabel, voiceSpeedComboBox);
 
 		ObservableList<String> voiceTypeOptions = FXCollections.observableArrayList(
-				"Normal Voice",
-				"New Zealand Voice"
+				"Male Voice 1",
+				"Male Voice 2",
+				"New Zealand Male Voice"
 				);
 
 		final ComboBox<String> voiceTypeComboBox = new ComboBox<String>(voiceTypeOptions);
-		voiceTypeComboBox.setStyle("-fx-base: " + BTN_COLOR + "; -fx-text-fill: " + TXT_FONT_COLOR);
+		voiceTypeComboBox.setStyle("-fx-base: " + BTN_COLOR + "; -fx-font: " + BTN_FONT_SIZE + " arial; -fx-text-fill: " + TXT_FONT_COLOR + ";");
 		
 		voiceTypeComboBox.setPromptText("Choose a voice");
-		voiceTypeComboBox.setTranslateY(5);
+		voiceTypeComboBox.setPrefHeight(CMB_HEIGHT);
+		voiceTypeComboBox.setPrefWidth(CMB_WIDTH);
 
 		Label voiceTypeLabel = new Label("Select voice type");
 		voiceTypeLabel.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + TXT_FONT_COLOR + ";");
+		voiceTypeLabel.setPrefWidth(TXT_WIDTH);
 		
 		voiceTypeBox.getChildren().addAll(voiceTypeLabel, voiceTypeComboBox);
 		
@@ -121,7 +129,16 @@ public class OptionsScreen extends Parent {
 			@Override
 			public void changed(ObservableValue<? extends String> arg0,
 					String oldValue, String newValue) {
-				//Add code here to call appropriate script 
+					String voice = "";
+				if(newValue.equals("Male Voice 1")) {
+					voice = "kal_diphone";
+				} else if (newValue.equals("Male Voice 2")) {
+					voice = "rab_diphone";
+				} else if (newValue.equals("New Zealand Male Voice")) {
+					voice = "akl_nz_jdt_diphone";
+				}
+				FestivalSpeakTask.changeVoice(voice);
+				new FestivalSpeakTask("Hello World!").run();
 			}
 
 		});
