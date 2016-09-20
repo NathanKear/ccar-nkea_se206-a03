@@ -9,6 +9,7 @@ import javafx.stage.WindowEvent;
 
 public class VoxspellPrototype extends Application {
 
+	// Global constants (naughty public static!!)
 	public static final String LIGHT_BLUE = "#9ad3de";
 	public static final String DARK_BLUE = "#89bdd3";
 	public static final String WHITE = "#e3e3e3";
@@ -32,10 +33,10 @@ public class VoxspellPrototype extends Application {
 	public void start(Stage stage) throws Exception {
 		Platform.setImplicitExit(false);
 		
+		// Fix window size
 		stage.setResizable(false);
 		
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-
 			@Override
 			public void handle(WindowEvent arg0) {
 				Platform.exit();
@@ -43,12 +44,10 @@ public class VoxspellPrototype extends Application {
 			
 		});
 		
+		// Create and format window and set to intial screen
 		_window = new Window(stage, WINDOW_WIDTH, WINDOW_HEIGHT);
-		
-		_window.SetWindowTitle(WINDOW_TITLE);	
-				
 		_window.SetWindowScene(new Scene(new MainScreen(_window), _window.GetWidth(), _window.GetHeight()));
-		
+		_window.SetWindowTitle(WINDOW_TITLE);	
 		_window.CenterOnScreen();
 		_window.Show(true);
 	}

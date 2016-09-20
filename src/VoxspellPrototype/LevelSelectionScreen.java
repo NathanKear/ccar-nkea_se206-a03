@@ -134,18 +134,16 @@ public class LevelSelectionScreen extends Parent {
 		root.setPrefWidth(_window.GetWidth());
 
 		//Creating the label to tell the user what to do
-		Label levelSelectLabel = new Label("Please select which level you wish to start at. All levels below "
+		Text levelSelectLabel = new Text("Please select which level you wish to start at. All levels below "
 				+ "the level you choose, and the level itself, will be unlocked!");
 		levelSelectLabel.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 		levelSelectLabel.setWrappingWidth(_window.GetWidth());
+		
 		root.setStyle("-fx-background-color: " + BACK_COLOR);
-
 		root.setPadding(new Insets(SELECTION_BAR_PADDING));
-
 		root.setPrefHeight(_window.GetHeight());
 		root.setPrefWidth(_window.GetWidth());
-
 		root.getChildren().addAll(levelSelectLabel, levelSelect);
 
 		this.getChildren().add(root);
@@ -328,6 +326,7 @@ public class LevelSelectionScreen extends Parent {
 		// Add padding around vbox (so buttons don't touch screen edge)
 		root.setPadding(new Insets(SELECTION_BAR_PADDING));
 
+		// Create timer to keep track of mouse position
 		_timeline = new Timeline(new KeyFrame(Duration.millis(1000 / TMR_TICK_RATE), _scrollTimer));
 		_timeline.setCycleCount(Timeline.INDEFINITE);		
 		_timeline.play();
@@ -340,36 +339,44 @@ public class LevelSelectionScreen extends Parent {
 		root.setStyle("-fx-background-color: " + BACK_COLOR + ";");
 	}
 
+	// Check mouse position for scroll action
 	private EventHandler<ActionEvent> _scrollTimer = new EventHandler<ActionEvent>() {
 		@Override
 		public void handle(ActionEvent e) {
 			Point mousePoint = MouseInfo.getPointerInfo().getLocation();
 			Rectangle windowBounds = _window.GetBounds();
 
+			// Check if window contains mouse.
 			if (windowBounds.contains(mousePoint)) {
+				
+				// Get mouse coordinates relative to the windows space.
 				Point relMousePoint = new Point(
 						(int) (mousePoint.getY() - windowBounds.getY() - 30), 
 						(int) (mousePoint.getX() - windowBounds.getX()));
 
-				// Get distance to top or bottom of screen
+				// Get distance to top or bottom of screen.
 				double dist = relMousePoint.getX() < (_window.GetHeight() / 2) ? 
 						relMousePoint.getX() : _window.GetHeight() - relMousePoint.getX();
 						dist = Math.abs(dist);		
-
-						if (Math.abs(dist) < SCROLL_EDGE_SIZE) {
-							double scrollSpeed = SCROLL_SENSITIVITY / dist;	
-
-							if (relMousePoint.getX() < _window.GetHeight() / 2) {
-								_scrollPosition = _scrollPosition + scrollSpeed;
-							} else {
-								_scrollPosition = _scrollPosition - scrollSpeed;
-							}
-
-							_scrollPosition = Math.min(0, _scrollPosition);
-							_scrollPosition = Math.max(-(_levelButtons.getHeight() - _window.GetHeight()), _scrollPosition);
-							_levelButtons.setTranslateY(_scrollPosition);
-						}
-
+						
+				// Only scroll if within certain range of screen edge.
+				if (Math.abs(dist) < SCROLL_EDGE_SIZE) {
+					double scrollSpeed = SCROLL_SENSITIVITY / dist;	
+					
+					// Get distance from top or bottom edge
+					if (relMousePoint.getX() < _window.GetHeight() / 2) {
+						_scrollPosition = _scrollPosition + scrollSpeed;
+					} else {
+						_scrollPosition = _scrollPosition - scrollSpeed;
+					}
+					
+					// Calculate scroll position
+					_scrollPosition = Math.min(0, _scrollPosition);
+					_scrollPosition = Math.max(-(_levelButtons.getHeight() - _window.GetHeight()), _scrollPosition);
+					
+					// Translate scroll buttons
+					_levelButtons.setTranslateY(_scrollPosition);
+				}
 			}
 		}	
 	};

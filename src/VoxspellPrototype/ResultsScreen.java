@@ -11,10 +11,16 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
+/**
+ * Display results of quiz for user to see and also present reward option
+ * @author nathan
+ *
+ */
 public class ResultsScreen extends Parent {
 	
 	private Window _window;
 	
+	// Content styling constants
 	private final String BTN_RETURN_TEXT = "Return";
 	private final String BTN_REWARD_TEXT = "Reward";
 	private final int VBX_SPACING = 50;
@@ -47,6 +53,7 @@ public class ResultsScreen extends Parent {
 		txtResults.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 		
+		// Create button that links to reward video
 		Button btnReward;
 		btnReward = new Button(BTN_REWARD_TEXT);
 		btnReward.setPrefWidth(BTNWIDTH_SCREENWIDTH_RATIO * _window.GetWidth());
@@ -56,8 +63,10 @@ public class ResultsScreen extends Parent {
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 		
+		// Does user get special reward (inverts video colors).
 		final boolean specialReward = correctWords == wordListLength;
 		
+		// Open media screen if button clicked.
 		btnReward.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -65,6 +74,7 @@ public class ResultsScreen extends Parent {
 			}
 		});
 		
+		// Button to return to the main menu.
 		Button btnReturn;
 		btnReturn = new Button(BTN_RETURN_TEXT);
 		btnReturn.setPrefWidth(BTNWIDTH_SCREENWIDTH_RATIO * _window.GetWidth());
@@ -73,6 +83,7 @@ public class ResultsScreen extends Parent {
 		btnReturn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");	
+		
 		btnReturn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -80,21 +91,21 @@ public class ResultsScreen extends Parent {
 			}
 		});
 		
+		// Add root node to current scene.
 		root.setAlignment(Pos.CENTER);
-		
-		root.getChildren().addAll(txtResults, btnReward, btnReturn);
-		
-		this.getChildren().addAll(root);
-		
+		root.getChildren().addAll(txtResults, btnReward, btnReturn);		
+		this.getChildren().addAll(root);		
 		root.setStyle("-fx-background-color: " + BACK_COLOR + ";");
 		
 		if (correctWords < VoxspellPrototype.QUIZ_LENGTH - 1) {
-			// Dont unlock reward or next level
+			// Dont unlock reward or next level.
 			btnReward.setDisable(true);	
 		} else {
-			// Unlock reward and next level
+			// Unlock reward and next level.
 			if (listName == WordList.GetWordList().HighestUnlockedLevel().levelName()) {
 				String level = "";
+				
+				// Deploy popup to inform user of new quiz level.
 				if ((level = WordList.GetWordList().UnlockNextLevel()) != null) {
 					if (level != null && !level.equals(""))
 					PopupWindow.DeployPopupWindow(level + " unlocked!");
