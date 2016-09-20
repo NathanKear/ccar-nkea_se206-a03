@@ -65,6 +65,7 @@ public class LevelSelectionScreen extends Parent {
 	public LevelSelectionScreen(Window window, String quizType) {
 		super();
 
+		//Checking what type of quiz the user wants
 		if(quizType.equals("Review_Quiz")) {
 			_quizType = QuizType.REVIEW_QUIZ;
 		} else if (quizType.equals("Normal_Quiz")) {
@@ -79,12 +80,16 @@ public class LevelSelectionScreen extends Parent {
 		//If the user is opening the application for the first time...
 		File wordlog = new File("Word-Log");
 
+		//If the user has unlocked levels then go straight to the Level Selection Screen
 		if(WordList.GetWordList().size() > 0 && WordList.GetWordList().get(0).isUnlocked()) {
 			GenerateLevelSelectionScreen();
+			
+		//Else if the word log doesn't exist then let the user choose what level they want to start at
 		} else if(!wordlog.exists()) {
 			ChooseLevelScreen();
 		}
 
+		//Or if the Word-Log file is there, then check if it is empty or not to decide which screen to show
 		try {
 			BufferedReader r = new BufferedReader(new FileReader(wordlog));
 
@@ -102,16 +107,25 @@ public class LevelSelectionScreen extends Parent {
 
 	}
 
+	/**
+	 * This generates the screen where users can choose which level to start at
+	 */
 	private void ChooseLevelScreen() {
+		
+		//Get the WordList
 		final WordList wordlist = WordList.GetWordList();
 
+		//Create the data structure for the level ComboBox
 		ObservableList<String> options = FXCollections.observableArrayList();
+		
+		//Getting the names of each level and adding it to the options list
 		for(int i = 0; i < wordlist.size(); i++) {
 			Level level = wordlist.get(i);
 			String levelName = level.levelName();
 			options.add(levelName);
 		}
 
+		//Creating the ComboBox
 		final ComboBox<String> levelSelect = new ComboBox<String>(options);
 
 		VBox root = new VBox(BUTTON_SEPERATION);
@@ -119,7 +133,8 @@ public class LevelSelectionScreen extends Parent {
 		// Set root node size
 		root.setPrefWidth(_window.GetWidth());
 
-		Text levelSelectLabel = new Text("Please select which level you wish to start at. All levels below "
+		//Creating the label to tell the user what to do
+		Label levelSelectLabel = new Label("Please select which level you wish to start at. All levels below "
 				+ "the level you choose, and the level itself, will be unlocked!");
 		levelSelectLabel.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
@@ -141,11 +156,13 @@ public class LevelSelectionScreen extends Parent {
 		levelSelect.setPrefHeight(60);
 		levelSelect.autosize();
 
+		//Adding a listener to see what level the user selects
 		levelSelect.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 
 			@Override
 			public void changed(ObservableValue<? extends String> arg0,
 					String oldValue, String newValue) {
+				//Unlocking every level up to and including the level the user selected
 				boolean levelFound = false;
 				for(int i = 0; i < wordlist.size(); i++) {
 					Level level = wordlist.get(i);
@@ -159,6 +176,7 @@ public class LevelSelectionScreen extends Parent {
 						levelFound = true;
 					}
 				}
+				//Showing the level selection screen once the appropriate levels have been unlocked
 				GenerateLevelSelectionScreen();
 			}
 
@@ -167,13 +185,18 @@ public class LevelSelectionScreen extends Parent {
 
 	}
 
+	/**
+	 * This method generates the screen where users can choose which level to do a quiz from
+	 */
 	private void GenerateLevelSelectionScreen() {
 
+		//Getting the WordList
 		WordList wordlist = WordList.GetWordList();
 
 		// Create vbox, add all level buttons
 		VBox root = new VBox(BUTTON_SEPERATION);
 
+		//Creating and adding functionality to a return to menu button
 		Button returnToMenuBtn = new Button("Return To Main Menu");
 		returnToMenuBtn.setPrefWidth(BTN_WIDTH);
 		returnToMenuBtn.setPrefHeight(BTN_HEIGHT);
@@ -196,13 +219,13 @@ public class LevelSelectionScreen extends Parent {
 
 		_btnLevels.add(returnToMenuBtn);
 
-
+		//Creating text to tell the user what this screen is
 		Text txtSelection = new Text(TXT_SELECT_LEVEL);
 		txtSelection.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 		root.getChildren().add(txtSelection);
 
-		wordlist = WordList.GetWordList();
+		//Looping through all the levels and getting their name and adding a button for them
 		ArrayList<String> levelName = new ArrayList<String>();
 
 		for(int i = 0; i < wordlist.size(); i++) {
@@ -212,6 +235,7 @@ public class LevelSelectionScreen extends Parent {
 
 			final Button btn = new Button();
 			
+			//Showing current mastered or failed stats depending on type of quiz selected
 			switch (_quizType) {
 			case NORMAL_QUIZ:
 				btn.setText(listName + " " + WordList.GetWordList().getLevelFromName(listName).getMasteredWords().size() + "/" + WordList.GetWordList().getLevelFromName(listName).Size());
@@ -227,6 +251,7 @@ public class LevelSelectionScreen extends Parent {
 			btn.setPrefHeight(BTN_HEIGHT);
 
 			if(_quizType == QuizType.NORMAL_QUIZ) {
+				//If the level is unlocked then make a button that allows a normal quiz to be played
 				if(level.isUnlocked()) {
 					btn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
 							" -fx-base: " + BTN_COLOR + ";" + 
@@ -238,6 +263,8 @@ public class LevelSelectionScreen extends Parent {
 							_window.SetWindowScene(new Scene(new QuizScreen(_window, listName, _quizType), _window.GetWidth(), _window.GetHeight()));
 						}
 					});
+					
+				//Else this level is locked so grey out the button and tell the user it is locked if they try to click on it
 				} else {
 					btn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
 							" -fx-base: " + BTN_LOCKED_COLOR + ";" + 
@@ -251,11 +278,13 @@ public class LevelSelectionScreen extends Parent {
 					});
 				}
 			} else if(_quizType == QuizType.REVIEW_QUIZ) {
+				//If the level is unlocked then create a normal button for it showing number of failed words
 				if(level.isUnlocked()) {
 					btn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
 							" -fx-base: " + BTN_COLOR + ";" + 
 							" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 
+					//If there are no words to review then let the user know this if they click on the level
 					if(WordList.GetWordList().GetRandomFailedWords(listName, 10).size() == 0) {
 						btn.setOnAction(new EventHandler<ActionEvent>() {
 							@Override
@@ -263,6 +292,8 @@ public class LevelSelectionScreen extends Parent {
 								PopupWindow.DeployPopupWindow("You currently have no words to review!");
 							}
 						});
+					
+					//Else let the button have full functionality for a review quiz
 					} else {
 						btn.setOnAction(new EventHandler<ActionEvent>() {
 							@Override
@@ -271,6 +302,8 @@ public class LevelSelectionScreen extends Parent {
 							}
 						});
 					}
+					
+				//Else the level is not unlocked so grey it out and let the user know it is locked if they click on it
 				} else {
 					btn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
 							" -fx-base: " + BTN_LOCKED_COLOR + ";" + 

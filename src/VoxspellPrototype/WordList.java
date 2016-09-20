@@ -21,6 +21,10 @@ public class WordList extends ArrayList<Level> {
 		super();
 	}
 
+	/**
+	 * This constructor applies the singleton method so that there is one global WordList object
+	 * @return the WordList
+	 */
 	public static WordList GetWordList() {
 		if (_instance == null) {
 			_instance = initialiseNathansAwesomeDataStructure("NZCER-spelling-lists.txt");
@@ -30,18 +34,30 @@ public class WordList extends ArrayList<Level> {
 		return _instance;
 	}
 
+	/**
+	 * Puts the WordList back into the state it was at at start up
+	 * 
+	 * @return the reloaded WordList
+	 */
 	public WordList ReloadWordList() {
+		//Reload the WordList by loading stats from file again
 		_instance = initialiseNathansAwesomeDataStructure("NZCER-spelling-lists.txt");
 
 		return _instance;
 	}
 
+	/**
+	 * Clears the WordList and reads the stats from file again
+	 */
 	public void clearWordList() {
 		this.clear();
 
 		_instance = initialiseNathansAwesomeDataStructure("NZCER-spelling-lists.txt");
 	}
 
+	/**
+	 * Clears all the stats currently saved in the WordList
+	 */
 	public void ClearStats() {
 		for (Level level : this) {
 			level.ClearStats();
@@ -76,11 +92,15 @@ public class WordList extends ArrayList<Level> {
 		return null;
 	}
 
+	/**
+	 * Saves all the stats currently in the WordList to a text file
+	 */
 	public void saveWordListToDisk() {
 		File f = new File("Word-Log");
 
 		try {
 
+			//Deleting and creating the file to write into it fresh
 			f.delete();
 			f.createNewFile();
 
@@ -114,6 +134,7 @@ public class WordList extends ArrayList<Level> {
 				}
 			}
 
+			//Saving which files are unlocked
 			for(int i = 0; i < this.size(); i++) {
 				//Getting a level from the hash map
 				Level level = this.get(i);
@@ -122,6 +143,7 @@ public class WordList extends ArrayList<Level> {
 				}
 			}
 
+			//Saving which words are currently failed
 			for(int i = 0; i < this.size(); i++) {
 				//Getting a level from the hash map
 				Level level = this.get(i);
@@ -131,6 +153,7 @@ public class WordList extends ArrayList<Level> {
 				}
 			}
 
+			//Saving which words are currently mastered
 			for(int i = 0; i < this.size(); i++) {
 				//Getting a level from the hash map
 				Level level = this.get(i);
@@ -147,6 +170,12 @@ public class WordList extends ArrayList<Level> {
 		}
 	}
 
+	/**
+	 * Loads stats from the Word-Log file into the WordList object
+	 * 
+	 * @param wordList
+	 * @return WordList
+	 */
 	private static WordList loadStatsFromFile(WordList wordList) {
 		File savedWords = new File("Word-Log");
 
@@ -160,8 +189,10 @@ public class WordList extends ArrayList<Level> {
 
 				String line = "";
 				while((line = statsReader.readLine()) != null) {
+					//If it's a level which needs to be unlocked
 					if(line.contains("unlock")) {
 						line = line.replaceAll("unlock ", "");
+						//Loop through all levels to find the right one and unlock it
 						for(int i = 0 ; i < wordlist.size(); i++) {
 							Level level = wordList.get(i);
 							String levelName = level.levelName();
@@ -169,10 +200,12 @@ public class WordList extends ArrayList<Level> {
 								level.unlockLevel();
 							}
 						}
+						//Else if it's a word which needs to be added to the failed list
 					} else if(line.contains("failed")) {
 						line = line.replaceAll("failed ", "");
 						String[] splitLine = line.split("\\s+");
 						String levelName = "";
+						//Getting the level name
 						for(int i = 0; i < splitLine.length - 1; i++) {
 							if(i != splitLine.length - 2) {
 								levelName += splitLine[i] + " ";
@@ -180,12 +213,17 @@ public class WordList extends ArrayList<Level> {
 								levelName += splitLine[i];	
 							}
 						}
+						//Getting the level associated with the word and adding the word to its failed list
 						Level level = wordlist.getLevelFromName(levelName);
 						level.addToFailed(splitLine[splitLine.length - 1]);
+						
+						//Else if the word needs to be added to the mastered list
 					} else if (line.contains("mastered")) {
 						line = line.replaceAll("mastered ", "");
 						String[] splitLine = line.split("\\s+");
 						String levelName = "";
+						
+						//Getting the level name
 						for(int i = 0; i < splitLine.length - 1; i++) {
 							if(i != splitLine.length - 2) {
 								levelName += splitLine[i] + " ";
@@ -193,8 +231,11 @@ public class WordList extends ArrayList<Level> {
 								levelName += splitLine[i];	
 							}
 						}
+						//Getting the level associated with the word and adding the word to its mastered list
 						Level level = wordlist.getLevelFromName(levelName);
 						level.addToMastered(splitLine[splitLine.length - 1]);
+						
+						//Else its the stats for a word
 					} else {
 						//Splitting each line by spaces
 						String[] wordAndStats = line.split("\\s+"); 
@@ -241,6 +282,12 @@ public class WordList extends ArrayList<Level> {
 		return wordList;
 	}
 
+	/**
+	 * Create the WordList with words from a file
+	 * 
+	 * @param fileName - the name of a file with words to be tested 
+	 * @return WordList
+	 */
 	private static WordList initialiseNathansAwesomeDataStructure(String fileName) {
 		//Creating the file to read from
 		File wordList = new File(fileName);
@@ -320,6 +367,13 @@ public class WordList extends ArrayList<Level> {
 		return wordlist.subList(0, listCount);
 	}
 
+	/**
+	 * Getting a random assortment of the failed words from a level
+	 * 
+	 * @param wordlistName - name of the level
+	 * @param listCount - number of words to return if there are that many words available
+	 * @return -  a list of currently failed words
+	 */
 	public List<String> GetRandomFailedWords(String wordlistName, int listCount) {
 		List<String> wordlist = null;
 
@@ -339,6 +393,12 @@ public class WordList extends ArrayList<Level> {
 		return wordlist.subList(0, listCount);
 	}
 
+	/**
+	 * This method is called when a word is failed to update the stats
+	 * 
+	 * @param word - the failed words
+	 * @param wordlistName - the level name
+	 */
 	public void failedWord(String word, String wordlistName) {
 
 		Level level = getLevelFromName(wordlistName);
@@ -361,6 +421,12 @@ public class WordList extends ArrayList<Level> {
 
 	}
 
+	/**
+	 * This method is called when a word is faulted to update the stats
+	 * 
+	 * @param word - the failed words
+	 * @param wordlistName - the level name
+	 */
 	public void faultedWord(String word, String wordlistName) {
 
 		Level level = getLevelFromName(wordlistName);
@@ -383,6 +449,12 @@ public class WordList extends ArrayList<Level> {
 
 	}
 
+	/**
+	 * This method is called when a word is mastered to update the stats
+	 * 
+	 * @param word - the failed words
+	 * @param wordlistName - the level name
+	 */
 	public void masteredWord(String word, String wordlistName) {
 
 		Level level = getLevelFromName(wordlistName);
@@ -405,6 +477,12 @@ public class WordList extends ArrayList<Level> {
 
 	}
 
+	/**
+	 * This method is used to return a level associated with a name
+	 * 
+	 * @param name - the level's name
+	 * @return a Level
+	 */
 	public Level getLevelFromName(String name) {
 		Level level = null;
 		for(int i = 0; i < this.size(); i++) {
@@ -416,11 +494,23 @@ public class WordList extends ArrayList<Level> {
 		return level;
 	}
 
+	/**
+	 * Adding a failed word to a Level's failed list
+	 * 
+	 * @param word - failed word
+	 * @param levelName - name of the Level
+	 */
 	public void addToLevelsFailedList(String word, String levelName) {
 		Level level = getLevelFromName(levelName);
 		level.addToFailed(word);
 	}
 
+	/**
+	 * Remove a word from a Level's failed list when it is faulted or mastered
+	 * 
+	 * @param word - word to be removed
+	 * @param levelName - name of the Level
+	 */
 	public void removeFromLevelFailedList(String word, String levelName) {
 		Level level = getLevelFromName(levelName);
 		level.removeFromFailed(word);

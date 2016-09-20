@@ -58,6 +58,9 @@ public class VoxspellPrototype extends Application {
 	}
 	
 	@Override
+	/**
+	 * This is overriding the method that is called when the platform exits and is used to save the stats to file
+	 */
 	public void stop(){
 	    //Save words to disk
 		WordList wordList = WordList.GetWordList();
