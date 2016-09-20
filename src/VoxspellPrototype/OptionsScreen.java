@@ -35,17 +35,21 @@ public class OptionsScreen extends Parent {
 
 		_window = window;
 
+		//Getting a vbox to put everything in
 		VBox root = new VBox(40);
 		root.setPadding(new Insets(OPTIONS_PADDING));
 		
+		//Adding it to the window
 		this.getChildren().add(root);
 
+		//Creating the two HBoxes for the voice speed and voice type options
 		HBox voiceSpeedBox = new HBox(30);
 		voiceSpeedBox.setAlignment(Pos.CENTER);
 
 		HBox voiceTypeBox = new HBox(40);
 		voiceTypeBox.setAlignment(Pos.CENTER);
 		
+		//Setting up the options label
 		Text optionsLabel = new Text("Options");
 
 		optionsLabel.prefWidth(_window.GetWidth());
@@ -55,6 +59,7 @@ public class OptionsScreen extends Parent {
 		optionsLabel.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" + 
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 		
+		//Creating a button to return to menu
 		Button returnToMenuBtn = new Button("Return To Main Menu");
 		
 		returnToMenuBtn.setPrefWidth(_window.GetWidth());
@@ -79,6 +84,7 @@ public class OptionsScreen extends Parent {
 		root.setPrefHeight(_window.GetHeight());
 		root.setPrefWidth(_window.GetWidth());
 		
+		//Creating the ComboBox for voice speed
 		ObservableList<String> voiceSpeedOptions = FXCollections.observableArrayList(
 				"Voice Speed 1",
 				"Voice Speed 2"
@@ -97,6 +103,7 @@ public class OptionsScreen extends Parent {
 
 		voiceSpeedBox.getChildren().addAll(voiceSpeedLabel, voiceSpeedComboBox);
 
+		//Creating the ComboBox for voice type
 		ObservableList<String> voiceTypeOptions = FXCollections.observableArrayList(
 				"Male Voice 1",
 				"Male Voice 2",
@@ -116,6 +123,7 @@ public class OptionsScreen extends Parent {
 		
 		voiceTypeBox.getChildren().addAll(voiceTypeLabel, voiceTypeComboBox);
 		
+		//Adding the listeners for the two ComboBoxes so that when the user selects an option it will take effect
 		voiceTypeComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 
 			@Override

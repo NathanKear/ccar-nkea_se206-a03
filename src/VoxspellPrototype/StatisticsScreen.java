@@ -71,7 +71,7 @@ public class StatisticsScreen extends Parent {
 			t.setClosable(false);
 			statsTabPane.getTabs().add(t);
 
-			populateStatsTable(wordlist.get(i), t, i + 1);
+			populateStatsTable(wordlist.get(i), t);
 		}
 
 		statsTabPane.setMinHeight(_window.GetHeight());
@@ -103,22 +103,28 @@ public class StatisticsScreen extends Parent {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void populateStatsTable(Level level, Tab tab, int index) {
+	/**
+	 * This method populates the stats table for each level
+	 * 
+	 * @param level - the Level containing the stats for its table
+	 * @param tab - the tab where the stats table is held
+	 */
+	private void populateStatsTable(Level level, Tab tab) {
 	
-
+		//Getting the levels words and stats for each word
 		HashMap<String, int[]> levelHashMap = level.getMap();
 
+		//Creating the cell value factory for the words
 		TableColumn<Map.Entry<String, int[]>, String> statsWordCol = new TableColumn<>("Word");
 		statsWordCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, int[]>, String>, ObservableValue<String>>() {
 
 			@Override
 			public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<String, int[]>, String> p) {
-				// this callback returns property for just one cell, you can't use a loop here
-				// for first column we use key
 				return new SimpleStringProperty(p.getValue().getKey());
 			}
 		});
-
+		
+		//Creating the cell value factory for the failed stats
 		TableColumn<Map.Entry<String, int[]>, String> statsFailedCol = new TableColumn<>("Failed");
 		statsFailedCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, int[]>, String>, ObservableValue<String>>() {
 
@@ -131,6 +137,7 @@ public class StatisticsScreen extends Parent {
 			}
 		});
 
+		//Creating the cell value factory for the faulted stats
 		TableColumn<Map.Entry<String, int[]>, String> statsFaultedCol = new TableColumn<>("Faulted");
 		statsFaultedCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, int[]>, String>, ObservableValue<String>>() {
 
@@ -143,6 +150,7 @@ public class StatisticsScreen extends Parent {
 			}
 		});
 
+		//Creating the cell value factory for the mastered stats
 		TableColumn<Map.Entry<String, int[]>, String> statsMasteredCol = new TableColumn<>("Mastered");
 		statsMasteredCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, int[]>, String>, ObservableValue<String>>() {
 
@@ -154,7 +162,8 @@ public class StatisticsScreen extends Parent {
 				return new SimpleStringProperty("" + statsArray[2]);
 			}
 		});
-
+		
+		//Setting the data for the table
 		ObservableList<Map.Entry<String, int[]>> items = FXCollections.observableArrayList(levelHashMap.entrySet());
 		final TableView<Map.Entry<String,int[]>> table = new TableView<>(items);
 		
