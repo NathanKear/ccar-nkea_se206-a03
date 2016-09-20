@@ -6,6 +6,11 @@ import javafx.geometry.Bounds;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * JavaFX window wrapper
+ * @author nathan
+ *
+ */
 public class Window {
 	
 	private int _width, _height;
@@ -19,14 +24,26 @@ public class Window {
 		return _height;
 	}
 	
+	/**
+	 * X position of window relative to monitor
+	 * @return
+	 */
 	public int GetPosX() {
 		return (int)this._window.getX();
 	}
 	
+	/**
+	 * Y position of window relative to monitor
+	 * @return
+	 */
 	public int GetPosY() {
 		return (int)this._window.getY();
 	}
 	
+	/**
+	 * Get underlying stage object
+	 * @return
+	 */
 	public Stage GetWindowStage() {
 		return _window;
 	}
@@ -38,10 +55,19 @@ public class Window {
 		this._width = width;
 	}
 	
+	/**
+	 * Change displayed content to scene
+	 * @param scene
+	 */
 	public void SetWindowScene(Scene scene) {
 		_window.setScene(scene);
 	}
 	
+	/**
+	 * Set window position relative to the monitor
+	 * @param x
+	 * @param y
+	 */
 	public void SetWindowPosition(int x, int y) {
 		_window.setX(x);
 		_window.setY(y);
@@ -51,6 +77,10 @@ public class Window {
 		_window.setTitle(title);
 	}
 	
+	/**
+	 * Display or hide the window
+	 * @param show
+	 */
 	public void Show(boolean show) {
 		if (show) {
 			_window.show();
@@ -59,10 +89,17 @@ public class Window {
 		}
 	}
 	
+	/**
+	 * Position monitor so it lies on the center of the screen
+	 */
 	public void CenterOnScreen() {
 		_window.centerOnScreen();
 	}
 	
+	/**
+	 * Get window bounds relative to monitor
+	 * @return
+	 */
 	public Rectangle GetBounds() {
 		return new Rectangle(
 				(int)this._window.getX(),

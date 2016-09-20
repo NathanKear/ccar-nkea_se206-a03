@@ -1,6 +1,31 @@
+Level 6 bus 0 0 1
+Level 6 later 0 1 0
+Level 6 four 1 0 0
+Level 6 I'm 1 0 0
+Level 6 most 0 0 1
+Level 6 wanted 0 0 1
+Level 6 turned 0 0 1
+Level 6 head 0 1 0
+Level 6 how 0 1 0
+Level 6 asked 0 1 0
+Level 6 top 0 0 1
+Level 6 dark 0 1 0
+Level 6 knew 1 0 0
+Level 6 black 0 0 2
+Level 6 suddenly 0 0 1
 unlock Level 1
 unlock Level 2
 unlock Level 3
 unlock Level 4
 unlock Level 5
 unlock Level 6
+failed Level 6 knew
+failed Level 6 four
+failed Level 6 I'm
+mastered Level 6 bus
+mastered Level 6 most
+mastered Level 6 suddenly
+mastered Level 6 black
+mastered Level 6 turned
+mastered Level 6 wanted
+mastered Level 6 top
