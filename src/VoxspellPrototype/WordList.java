@@ -41,7 +41,7 @@ public class WordList extends ArrayList<Level> {
 
 		_instance = initialiseNathansAwesomeDataStructure("NZCER-spelling-lists.txt");
 	}
-	
+
 	public void ClearStats() {
 		for (Level level : this) {
 			level.ClearStats();
@@ -59,10 +59,10 @@ public class WordList extends ArrayList<Level> {
 				return level.levelName();
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Return highest level unlocked.
 	 * @return Highest level unlocked. Null if none unlocked.
@@ -72,7 +72,7 @@ public class WordList extends ArrayList<Level> {
 			if (this.get(i).isUnlocked())
 				return this.get(i);
 		}
-		
+
 		return null;
 	}
 
@@ -130,7 +130,16 @@ public class WordList extends ArrayList<Level> {
 					textFileWriter.append("failed " + level.levelName() + " " + failedWords.get(j) + "\n");
 				}
 			}
-			
+
+			for(int i = 0; i < this.size(); i++) {
+				//Getting a level from the hash map
+				Level level = this.get(i);
+				List<String> masteredWords = level.getMasteredWords();
+				for(int j = 0; j < masteredWords.size(); j++) {
+					textFileWriter.append("mastered " + level.levelName() + " " + masteredWords.get(j) + "\n");
+				}
+			}
+
 
 			textFileWriter.close();
 		} catch (IOException e) {
@@ -173,6 +182,19 @@ public class WordList extends ArrayList<Level> {
 						}
 						Level level = wordlist.getLevelFromName(levelName);
 						level.addToFailed(splitLine[splitLine.length - 1]);
+					} else if (line.contains("mastered")) {
+						line = line.replaceAll("mastered ", "");
+						String[] splitLine = line.split("\\s+");
+						String levelName = "";
+						for(int i = 0; i < splitLine.length - 1; i++) {
+							if(i != splitLine.length - 2) {
+								levelName += splitLine[i] + " ";
+							} else {
+								levelName += splitLine[i];	
+							}
+						}
+						Level level = wordlist.getLevelFromName(levelName);
+						level.addToMastered(splitLine[splitLine.length - 1]);
 					} else {
 						//Splitting each line by spaces
 						String[] wordAndStats = line.split("\\s+"); 
@@ -321,7 +343,7 @@ public class WordList extends ArrayList<Level> {
 		} else {
 			return wordlist.subList(0, listCount);
 		}
-		
+
 	}
 
 	public void failedWord(String word, String wordlistName) {
