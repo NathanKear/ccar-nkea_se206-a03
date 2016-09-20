@@ -16,10 +16,6 @@ class FestivalSpeakTask extends Task<Void> {
 	public FestivalSpeakTask(String word) {
 		this._word = word;
 	}
-	
-	public FestivalSpeakTask(String word) {
-		this._word = word;
-	}
 
 	@Override
 	protected Void call() throws Exception {
