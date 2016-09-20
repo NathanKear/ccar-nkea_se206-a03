@@ -79,7 +79,9 @@ public class LevelSelectionScreen extends Parent {
 		//If the user is opening the application for the first time...
 		File wordlog = new File("Word-Log");
 
-		if(!wordlog.exists()) {
+		if(WordList.GetWordList().size() > 0 && WordList.GetWordList().get(0).isUnlocked()) {
+			GenerateLevelSelectionScreen();
+		} else if(!wordlog.exists()) {
 			ChooseLevelScreen();
 		}
 

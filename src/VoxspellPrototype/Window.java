@@ -64,7 +64,6 @@ public class Window {
 	}
 	
 	public Rectangle GetBounds() {
-		Bounds b = this._window.getScene().getRoot().localToScreen(this._window.getScene().getRoot().getBoundsInLocal());
 		return new Rectangle(
 				(int)this._window.getX(),
 				(int)this._window.getY(),
