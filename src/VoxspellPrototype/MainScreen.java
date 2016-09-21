@@ -171,6 +171,7 @@ public class MainScreen extends Parent {
 			@Override
 			public void handle(ActionEvent arg0) {
 				WordList.GetWordList().ClearStats();
+				PopupWindow.DeployPopupWindow("Stats cleared!");
 			}	
 		});
 		
