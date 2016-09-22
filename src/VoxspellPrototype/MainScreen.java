@@ -170,6 +170,7 @@ public class MainScreen extends Parent {
 		btnClear.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
+				PopupWindow.DeployPopupWindow("Cleared Statistics");
 				WordList.GetWordList().ClearStats();
 			}	
 		});
