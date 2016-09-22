@@ -209,8 +209,7 @@ public class MediaScreen extends Parent {
         lowerPanel.add(btnPause, BorderLayout.SOUTH);
         lowerPanel.add(btnMute, BorderLayout.NORTH);
         lowerPanel.add(btnSpookify, BorderLayout.CENTER);
-        
-        
+                
         frame.setResizable(false);
         frame.setLayout(new BorderLayout());
         frame.add(_mediaPlayerComponent, BorderLayout.CENTER);

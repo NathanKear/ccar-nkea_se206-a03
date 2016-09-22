@@ -1,31 +1,96 @@
-Level 6 bus 0 0 1
-Level 6 later 0 1 0
+Level 1 the 0 0 4
+Level 1 a 0 0 4
+Level 1 in 0 0 4
+Level 1 and 0 2 2
+Level 1 was 0 0 4
+Level 1 I 0 0 4
+Level 1 it 1 0 3
+Level 1 to 0 0 4
+Level 1 my 0 0 3
+Level 1 we 0 0 5
+Level 6 lunch 1 1 0
+Level 6 woke 2 1 1
+Level 6 tell 1 0 1
+Level 6 run 2 0 1
+Level 6 decided 1 0 1
+Level 6 find 1 2 0
 Level 6 four 1 0 0
+Level 6 sister 1 0 1
+Level 6 jump 1 0 1
+Level 6 town 0 0 1
+Level 6 minutes 2 0 1
+Level 6 its 1 0 1
+Level 6 water 1 1 0
 Level 6 I'm 1 0 0
 Level 6 most 0 0 1
-Level 6 wanted 0 0 1
-Level 6 turned 0 0 1
-Level 6 head 0 1 0
-Level 6 how 0 1 0
-Level 6 asked 0 1 0
-Level 6 top 0 0 1
-Level 6 dark 0 1 0
-Level 6 knew 1 0 0
-Level 6 black 0 0 2
-Level 6 suddenly 0 0 1
+Level 6 wanted 1 0 1
+Level 6 even 1 0 0
+Level 6 outside 2 0 1
+Level 6 gave 3 0 0
+Level 6 boy 1 0 0
+Level 6 life 1 0 1
+Level 6 head 2 0 0
+Level 6 fell 1 0 0
+Level 6 getting 1 0 0
+Level 6 how 1 0 0
+Level 6 top 2 0 1
+Level 6 ready 1 0 0
+Level 6 cat 1 0 0
+Level 6 end 3 0 0
+Level 6 place 0 0 1
+Level 6 every 1 1 1
+Level 6 make 1 0 1
+Level 6 I'll 2 0 0
+Level 6 yes 1 0 0
+Level 6 right 1 0 0
+Level 6 great 1 1 0
+Level 6 nice 2 0 0
 unlock Level 1
 unlock Level 2
 unlock Level 3
 unlock Level 4
 unlock Level 5
 unlock Level 6
-failed Level 6 knew
-failed Level 6 four
+failed Level 6 gave
+failed Level 6 head
 failed Level 6 I'm
-mastered Level 6 bus
+failed Level 6 fell
+failed Level 6 yes
+failed Level 6 nice
+failed Level 6 how
+failed Level 6 boy
+failed Level 6 right
+failed Level 6 four
+failed Level 6 cat
+failed Level 6 I'll
+failed Level 6 getting
+failed Level 6 end
+failed Level 6 decided
+failed Level 6 even
+failed Level 6 ready
+mastered Level 1 a
+mastered Level 1 the
+mastered Level 1 we
+mastered Level 1 in
+mastered Level 1 was
+mastered Level 1 to
+mastered Level 1 I
+mastered Level 1 my
+mastered Level 1 it
+mastered Level 1 and
+mastered Level 6 place
 mastered Level 6 most
-mastered Level 6 suddenly
-mastered Level 6 black
-mastered Level 6 turned
-mastered Level 6 wanted
+mastered Level 6 town
 mastered Level 6 top
+mastered Level 6 its
+mastered Level 6 tell
+mastered Level 6 minutes
+mastered Level 6 woke
+mastered Level 6 life
+mastered Level 6 make
+mastered Level 6 every
+mastered Level 6 jump
+mastered Level 6 outside
+mastered Level 6 sister
+mastered Level 6 run
+mastered Level 6 wanted

@@ -203,23 +203,23 @@ public class QuizScreen extends Parent {
 			if (correct) {
 				// Correct on first guess
 				_masteredWords++;
-				speechOutput = speechOutput + "Correct..";
+				speechOutput = speechOutput + "Correct............";
 				WordList.GetWordList().masteredWord(currentWord(), _level);
 				advance = true;
 			} else {
 				// Incorrect on first guess
-				speechOutput = speechOutput + "Incorrect.. try again.. " + currentWord() + ".. " + currentWord() + ".";
+				speechOutput = speechOutput + "Incorrect............ try again.. " + currentWord() + ".. " + currentWord() + ".";
 				_firstGuess = false;
 			}
 		} else {
 			if (correct) {
 				// Correct on second guess
-				speechOutput = speechOutput + "Correct..";
+				speechOutput = speechOutput + "Correct.............";
 				WordList.GetWordList().faultedWord(currentWord(), _level);
 				advance = true;
 			} else {
 				// Incorrect on second guess
-				speechOutput = speechOutput + "Incorrect..";
+				speechOutput = speechOutput + "Incorrect............................";
 				WordList.GetWordList().failedWord(currentWord(), _level);
 				advance = true;
 			}
